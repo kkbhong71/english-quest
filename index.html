@@ -506,30 +506,60 @@ const SAMPLE = [{
   ta: 98,
   ll: "03-25"
 }];
-var speak = function (t, r) {
+
+// ═══ 모바일 TTS 해결 ═══
+var ttsReady = false;
+var ttsVoice = null;
+function initTTS() {
+  if (!window.speechSynthesis) return;
+  var loadVoices = function () {
+    var vs = window.speechSynthesis.getVoices();
+    if (vs.length === 0) return;
+    ttsVoice = vs.find(function (x) {
+      return x.lang === "en-US" && x.name.indexOf("Google") >= 0;
+    }) || vs.find(function (x) {
+      return x.lang === "en-US";
+    }) || vs.find(function (x) {
+      return x.lang.indexOf("en") === 0;
+    });
+  };
+  loadVoices();
+  if (window.speechSynthesis.onvoiceschanged !== undefined) {
+    window.speechSynthesis.onvoiceschanged = loadVoices;
+  }
+}
+function unlockTTS() {
+  if (ttsReady || !window.speechSynthesis) return;
+  var u = new SpeechSynthesisUtterance("");
+  u.volume = 0;
+  u.lang = "en-US";
+  window.speechSynthesis.speak(u);
+  ttsReady = true;
+}
+function speak(t, r) {
   if (!window.speechSynthesis) return;
   window.speechSynthesis.cancel();
-  var u = new SpeechSynthesisUtterance(t);
-  u.lang = "en-US";
-  u.rate = r || 0.85;
-  u.pitch = 1;
-  var vs = window.speechSynthesis.getVoices();
-  var ev = vs.find(function (x) {
-    return x.lang.startsWith("en") && x.name.includes("Google");
-  }) || vs.find(function (x) {
-    return x.lang.startsWith("en-US");
-  }) || vs.find(function (x) {
-    return x.lang.startsWith("en");
-  });
-  if (ev) u.voice = ev;
-  window.speechSynthesis.speak(u);
-};
+  // 약간의 딜레이로 cancel과 speak 충돌 방지
+  setTimeout(function () {
+    var u = new SpeechSynthesisUtterance(t);
+    u.lang = "en-US";
+    u.rate = r || 0.85;
+    u.pitch = 1;
+    u.volume = 1;
+    if (ttsVoice) u.voice = ttsVoice;
+    window.speechSynthesis.speak(u);
+  }, 50);
+}
 var xpFor = function (lv) {
   return lv * 50 + (lv - 1) * 20;
 };
+
+// 교사 비밀번호 (변경 가능)
+var TEACHER_PW = "5012";
 function SB(props) {
   return /*#__PURE__*/React.createElement("button", {
     onClick: function () {
+      unlockTTS();
       speak(props.t);
     },
     style: {
@@ -551,6 +581,11 @@ function WC(props) {
   var hds = useState(false),
     hd = hds[0],
     setHd = hds[1];
+  // 대/소문자 토글
+  var ucs = useState(true),
+    isUpper = ucs[0],
+    setIsUpper = ucs[1];
+  var currentLetter = isUpper ? props.letter : props.letter.toLowerCase();
   var gp = function (e) {
     var c = cr.current,
       r = c.getBoundingClientRect(),
@@ -608,13 +643,13 @@ function WC(props) {
     ctx.fillText(l, 150, 155);
   }, []);
   var cl = function () {
-    dg(cr.current.getContext("2d"), props.letter);
+    dg(cr.current.getContext("2d"), currentLetter);
     setHd(false);
   };
   useEffect(function () {
-    dg(cr.current.getContext("2d"), props.letter);
+    dg(cr.current.getContext("2d"), currentLetter);
     setHd(false);
-  }, [props.letter, dg]);
+  }, [currentLetter, dg]);
   return /*#__PURE__*/React.createElement("div", {
     style: {
       display: "flex",
@@ -623,7 +658,45 @@ function WC(props) {
       gap: 12,
       marginTop: 14
     }
-  }, /*#__PURE__*/React.createElement("canvas", {
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 8,
+      marginBottom: 4
+    }
+  }, /*#__PURE__*/React.createElement("button", {
+    onClick: function () {
+      setIsUpper(true);
+      setHd(false);
+    },
+    style: {
+      padding: "8px 20px",
+      borderRadius: 12,
+      border: "2px solid " + (isUpper ? "#667eea" : "#e2e8f0"),
+      background: isUpper ? "#667eea" : "white",
+      color: isUpper ? "white" : "#667eea",
+      fontWeight: 700,
+      cursor: "pointer",
+      fontFamily: "'Fredoka'",
+      fontSize: "1.2em"
+    }
+  }, props.letter), /*#__PURE__*/React.createElement("button", {
+    onClick: function () {
+      setIsUpper(false);
+      setHd(false);
+    },
+    style: {
+      padding: "8px 20px",
+      borderRadius: 12,
+      border: "2px solid " + (!isUpper ? "#764ba2" : "#e2e8f0"),
+      background: !isUpper ? "#764ba2" : "white",
+      color: !isUpper ? "white" : "#764ba2",
+      fontWeight: 700,
+      cursor: "pointer",
+      fontFamily: "'Fredoka'",
+      fontSize: "1.2em"
+    }
+  }, props.letter.toLowerCase())), /*#__PURE__*/React.createElement("canvas", {
     ref: cr,
     width: 300,
     height: 300,
@@ -745,6 +818,38 @@ function App() {
   var dts = useState("overview"),
     dt = dts[0],
     setDt = dts[1];
+  // 교사 인증 상태
+  var tpws = useState(""),
+    tpw = tpws[0],
+    setTpw = tpws[1];
+  var tauths = useState(false),
+    tauth = tauths[0],
+    setTauth = tauths[1];
+  var tperrs = useState(false),
+    tperr = tperrs[0],
+    setTperr = tperrs[1];
+
+  // TTS 초기화
+  useEffect(function () {
+    initTTS();
+  }, []);
+
+  // 첫 터치시 TTS 잠금 해제 (모바일)
+  useEffect(function () {
+    var handler = function () {
+      unlockTTS();
+    };
+    document.addEventListener('touchstart', handler, {
+      once: true
+    });
+    document.addEventListener('click', handler, {
+      once: true
+    });
+    return function () {
+      document.removeEventListener('touchstart', handler);
+      document.removeEventListener('click', handler);
+    };
+  }, []);
   useEffect(function () {
     if (st) LS.save('student', st);
   }, [st]);
@@ -809,11 +914,9 @@ function App() {
       }
     });
   }, [st && st.xp, st && st.qc, st && st.wl]);
-  useEffect(function () {
-    if (window.speechSynthesis) window.speechSynthesis.getVoices();
-  }, []);
   var go = function () {
     if (!ni.trim()) return;
+    unlockTTS();
     var ns = {
       name: ni.trim(),
       xp: 0,
@@ -835,7 +938,7 @@ function App() {
     sm("환영합니다, " + ni.trim() + "! 🚀");
   };
   var logout = function () {
-    if (confirm("로그아웃하시겠습니까?\n(기존 데이터는 유지됩니다)")) {
+    if (confirm("로그아웃하시겠습니까?")) {
       LS.remove('student');
       setSt(null);
       setV("welcome");
@@ -875,13 +978,13 @@ function App() {
     });
     setSv2("match");
   };
-  var hm = function (tp, ix) {
+  var hm = function (tp2, ix) {
     if (!mg) return;
     if (!mg.sel) {
       setMg(function (p) {
         return Object.assign({}, p, {
           sel: {
-            tp: tp,
+            tp: tp2,
             ix: ix
           }
         });
@@ -889,19 +992,19 @@ function App() {
       return;
     }
     var s = mg.sel;
-    if (s.tp === tp) {
+    if (s.tp === tp2) {
       setMg(function (p) {
         return Object.assign({}, p, {
           sel: {
-            tp: tp,
+            tp: tp2,
             ix: ix
           }
         });
       });
       return;
     }
-    var ew = tp === "en" ? mg.w[ix] : mg.w[s.ix];
-    var kw = tp === "ko" ? mg.sk[ix] : mg.sk[s.ix];
+    var ew = tp2 === "en" ? mg.w[ix] : mg.w[s.ix];
+    var kw = tp2 === "ko" ? mg.sk[ix] : mg.sk[s.ix];
     if (ew.en === kw.en) {
       var nm = mg.m.concat([ew.en]);
       setMg(function (p) {
@@ -1032,7 +1135,10 @@ function App() {
     if (oi === q.a) setQs(function (p) {
       return p + 1;
     });
-    if (q.sp) speak(q.sp);
+    if (q.sp) {
+      unlockTTS();
+      speak(q.sp);
+    }
   };
   var nqz = function () {
     if (qi + 1 >= qq.length) {
@@ -1053,6 +1159,18 @@ function App() {
     });
     setQa(false);
     setSr(null);
+  };
+
+  // 교사 로그인 처리
+  var teacherLogin = function () {
+    if (tpw === TEACHER_PW) {
+      setTauth(true);
+      setTperr(false);
+      setTpw("");
+    } else {
+      setTperr(true);
+      setTpw("");
+    }
   };
   var nlx = st ? xpFor(st.lv + 1) : 0;
   var plx = st ? xpFor(st.lv) : 0;
@@ -1251,7 +1369,7 @@ function App() {
     }, "\uD83D\uDEAA")));
   };
 
-  // WELCOME
+  // ═══ WELCOME ═══
   if (v === "welcome") return /*#__PURE__*/React.createElement("div", {
     style: S.app
   }, /*#__PURE__*/React.createElement(Toast, null), /*#__PURE__*/React.createElement("div", {
@@ -1321,7 +1439,10 @@ function App() {
     }
   }, "\uD559\uC2B5 \uAE30\uB85D\uC740 \uC774 \uAE30\uAE30\uC5D0 \uC790\uB3D9 \uC800\uC7A5\uB429\uB2C8\uB2E4"), /*#__PURE__*/React.createElement("button", {
     onClick: function () {
-      setV("dash");
+      setV("dashLogin");
+      setTauth(false);
+      setTpw("");
+      setTperr(false);
     },
     style: {
       padding: "10px 24px",
@@ -1334,7 +1455,7 @@ function App() {
       cursor: "pointer",
       fontFamily: "'Noto Sans KR'"
     }
-  }, "\uD83D\uDCCA \uAD50\uC0AC \uB300\uC2DC\uBCF4\uB4DC"), /*#__PURE__*/React.createElement("p", {
+  }, "\uD83D\uDD12 \uAD50\uC0AC \uB300\uC2DC\uBCF4\uB4DC"), /*#__PURE__*/React.createElement("p", {
     style: {
       color: "rgba(255,255,255,0.5)",
       fontSize: "0.72em",
@@ -1342,8 +1463,96 @@ function App() {
     }
   }, "\uC624\uC131\uC911\uD559\uAD50 English Quest v1.0")));
 
-  // DASHBOARD
-  if (v === "dash") {
+  // ═══ 교사 로그인 화면 ═══
+  if (v === "dashLogin" && !tauth) return /*#__PURE__*/React.createElement("div", {
+    style: S.app
+  }, /*#__PURE__*/React.createElement(Toast, null), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+      minHeight: "100vh",
+      padding: 20,
+      textAlign: "center"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: "3em",
+      marginBottom: 12
+    }
+  }, "\uD83D\uDD12"), /*#__PURE__*/React.createElement("h2", {
+    style: {
+      fontFamily: "'Fredoka'",
+      fontSize: "1.6em",
+      color: "white",
+      marginBottom: 6
+    }
+  }, "\uAD50\uC0AC \uB300\uC2DC\uBCF4\uB4DC"), /*#__PURE__*/React.createElement("p", {
+    style: {
+      color: "rgba(255,255,255,0.8)",
+      fontSize: "0.95em",
+      marginBottom: 20
+    }
+  }, "\uC811\uADFC \uAD8C\uD55C\uC774 \uD544\uC694\uD569\uB2C8\uB2E4"), /*#__PURE__*/React.createElement("div", {
+    style: Object.assign({}, S.card, {
+      maxWidth: 340,
+      width: "100%"
+    })
+  }, /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontSize: "0.9em",
+      color: "#64748b",
+      marginBottom: 12
+    }
+  }, "\uBE44\uBC00\uBC88\uD638\uB97C \uC785\uB825\uD558\uC138\uC694"), /*#__PURE__*/React.createElement("input", {
+    type: "password",
+    placeholder: "\uBE44\uBC00\uBC88\uD638",
+    value: tpw,
+    onChange: function (e) {
+      setTpw(e.target.value);
+      setTperr(false);
+    },
+    onKeyDown: function (e) {
+      if (e.key === "Enter") teacherLogin();
+    },
+    style: {
+      padding: "12px 20px",
+      borderRadius: 14,
+      border: "2px solid " + (tperr ? "#ef4444" : "#e2e8f0"),
+      background: "white",
+      fontSize: "1em",
+      width: "100%",
+      textAlign: "center",
+      fontFamily: "'Noto Sans KR'",
+      outline: "none",
+      marginBottom: 10
+    }
+  }), tperr && /*#__PURE__*/React.createElement("p", {
+    style: {
+      color: "#ef4444",
+      fontSize: "0.85em",
+      marginBottom: 8
+    }
+  }, "\u274C \uBE44\uBC00\uBC88\uD638\uAC00 \uC62C\uBC14\uB974\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 8,
+      justifyContent: "center"
+    }
+  }, /*#__PURE__*/React.createElement("button", {
+    onClick: function () {
+      setV("welcome");
+    },
+    style: S.bs
+  }, "\u2190 \uB3CC\uC544\uAC00\uAE30"), /*#__PURE__*/React.createElement("button", {
+    onClick: teacherLogin,
+    style: S.bp
+  }, "\uD83D\uDD13 \uB85C\uADF8\uC778")))));
+
+  // ═══ DASHBOARD (인증 후) ═══
+  if (v === "dashLogin" && tauth || v === "dash") {
+    if (v === "dashLogin") setV("dash");
     var tot = SAMPLE.length;
     var ax = Math.round(SAMPLE.reduce(function (a, s) {
       return a + s.xp;
@@ -1401,9 +1610,10 @@ function App() {
         fontSize: "0.82em"
       },
       onClick: function () {
+        setTauth(false);
         setV("welcome");
       }
-    }, "\uD83C\uDFE0\uD648"))), /*#__PURE__*/React.createElement("div", {
+    }, "\uD83D\uDD12\uB85C\uADF8\uC544\uC6C3"))), /*#__PURE__*/React.createElement("div", {
       style: S.cnt
     }, dt === "overview" && /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
       style: {
@@ -1656,7 +1866,7 @@ function App() {
     })))));
   }
 
-  // MAP
+  // ═══ MAP ═══
   if (v === "map") return /*#__PURE__*/React.createElement("div", {
     style: S.app
   }, /*#__PURE__*/React.createElement(Toast, null), /*#__PURE__*/React.createElement(Hdr, null), /*#__PURE__*/React.createElement("div", {
@@ -1780,7 +1990,7 @@ function App() {
     }
   }, "\uD83D\uDCDD \uC885\uD569 \uD034\uC988!"))));
 
-  // STAGE
+  // ═══ STAGE ═══
   if (v === "stage" && cs) {
     var RS = function () {
       if (cs.id === 1) {
@@ -1789,21 +1999,21 @@ function App() {
           style: S.card
         }, /*#__PURE__*/React.createElement("div", {
           style: S.sec
-        }, "✍️ 따라쓰기: " + a.u), /*#__PURE__*/React.createElement("div", {
+        }, "✍️ 따라쓰기: " + a.u + " / " + a.lo), /*#__PURE__*/React.createElement("div", {
           style: {
             textAlign: "center",
-            marginBottom: 10
+            marginBottom: 6
           }
         }, /*#__PURE__*/React.createElement("span", {
           style: {
             fontFamily: "'Fredoka'",
-            fontSize: "3em",
+            fontSize: "2.5em",
             color: "#667eea"
           }
         }, a.u), /*#__PURE__*/React.createElement("span", {
           style: {
             fontFamily: "'Fredoka'",
-            fontSize: "2em",
+            fontSize: "1.8em",
             color: "#764ba2",
             marginLeft: 10
           }
@@ -1811,9 +2021,10 @@ function App() {
           style: {
             textAlign: "center",
             color: "#64748b",
-            fontSize: "0.88em"
+            fontSize: "0.85em",
+            marginBottom: 4
           }
-        }, "\uAC00\uC774\uB4DC \uAE00\uC790 \uC704\uC5D0 \uC190\uAC00\uB77D\uC774\uB098 \uB9C8\uC6B0\uC2A4\uB85C \uB530\uB77C \uC368\uBCF4\uC138\uC694!"), /*#__PURE__*/React.createElement(WC, {
+        }, "\uB300\uBB38\uC790/\uC18C\uBB38\uC790\uB97C \uC120\uD0DD\uD558\uACE0 \uAC00\uC774\uB4DC \uC704\uC5D0 \uB530\uB77C \uC368\uBCF4\uC138\uC694!"), /*#__PURE__*/React.createElement(WC, {
           letter: a.u,
           onDone: function () {
             axp(5);
@@ -1837,7 +2048,7 @@ function App() {
         }, /*#__PURE__*/React.createElement(SB, {
           t: a.u,
           sz: "lg",
-          lb: "\uBC1C\uC74C \uB4E3\uAE30"
+          lb: "\"" + a.u + "\" 발음 듣기"
         })));
         return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
           style: S.card
@@ -1875,17 +2086,15 @@ function App() {
         }, a.e), a.w), /*#__PURE__*/React.createElement("div", {
           style: {
             display: "flex",
-            gap: 7,
+            gap: 8,
             justifyContent: "center",
             flexWrap: "wrap",
             marginBottom: 12
           }
         }, /*#__PURE__*/React.createElement(SB, {
           t: a.u,
+          sz: "lg",
           lb: a.u + " 발음"
-        }), /*#__PURE__*/React.createElement(SB, {
-          t: a.lo,
-          lb: a.lo + " 발음"
         }), /*#__PURE__*/React.createElement(SB, {
           t: a.w,
           lb: a.w + " 발음"
@@ -1926,6 +2135,7 @@ function App() {
             key: i,
             onClick: function () {
               setAi(i);
+              unlockTTS();
               speak(x.u);
             },
             style: {
@@ -2083,6 +2293,7 @@ function App() {
         })), /*#__PURE__*/React.createElement("div", {
           onClick: function () {
             setSwa(!swa);
+            unlockTTS();
             speak(w.en);
           },
           style: {
@@ -2422,6 +2633,7 @@ function App() {
               if (i === g.a) {
                 axp(15);
                 sm("🎉 정답! +15 XP");
+                unlockTTS();
                 speak(g.s.replace("___", g.o[g.a]));
                 setSt(function (p) {
                   return Object.assign({}, p, {
@@ -2506,7 +2718,7 @@ function App() {
     }, cs.name)), /*#__PURE__*/React.createElement(RS, null)));
   }
 
-  // QUIZ
+  // ═══ QUIZ ═══
   if (v === "quiz" && qq.length > 0) {
     var q = qq[qi];
     return /*#__PURE__*/React.createElement("div", {
@@ -2553,6 +2765,7 @@ function App() {
       }
     }, /*#__PURE__*/React.createElement("button", {
       onClick: function () {
+        unlockTTS();
         speak(q.sp);
       },
       style: {
@@ -2625,7 +2838,7 @@ function App() {
     }, qi + 1 >= qq.length ? "결과 보기" : "다음 문제 ▶")))));
   }
 
-  // RESULT
+  // ═══ RESULT ═══
   if (v === "result") {
     var pct = Math.round(qs / qq.length * 100);
     return /*#__PURE__*/React.createElement("div", {
@@ -2678,7 +2891,7 @@ function App() {
     }, "\uD83D\uDDFA\uFE0F \uB9F5\uC73C\uB85C")))));
   }
 
-  // PROFILE
+  // ═══ PROFILE ═══
   if (v === "profile") return /*#__PURE__*/React.createElement("div", {
     style: S.app
   }, /*#__PURE__*/React.createElement(Toast, null), /*#__PURE__*/React.createElement(Hdr, null), /*#__PURE__*/React.createElement("div", {
@@ -2803,7 +3016,7 @@ function App() {
     }
   }, "\uD83D\uDDD1\uFE0F \uB370\uC774\uD130 \uCD08\uAE30\uD654"))));
 
-  // LEADERBOARD
+  // ═══ LEADERBOARD ═══
   if (v === "lb") {
     var all = SAMPLE.concat([Object.assign({}, st, {
       name: st.name + " (나)",
