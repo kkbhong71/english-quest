@@ -3,672 +3,2869 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#667eea">
 <title>English Quest - 모험으로 배우는 영어</title>
+<meta name="description" content="중학교 영어 기초 학습 게임">
+<meta name="theme-color" content="#667eea">
+<meta name="mobile-web-app-capable" content="yes">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏰</text></svg>">
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--pri:#667eea;--pri2:#764ba2;--green:#22c55e;--red:#ef4444;--yellow:#f59e0b;--bg:linear-gradient(135deg,#667eea 0%,#764ba2 100%);--card:rgba(255,255,255,0.95);--shadow:0 8px 32px rgba(0,0,0,0.1);--ff:'Noto Sans KR',sans-serif;--fd:'Fredoka',sans-serif}
-body{font-family:var(--ff);min-height:100vh;min-height:100dvh;background:var(--bg);color:#1e293b;overflow-x:hidden;-webkit-tap-highlight-color:transparent}
-#root{min-height:100vh;min-height:100dvh}
-
-/* HEADER */
-.hdr{background:rgba(255,255,255,0.15);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);padding:10px 16px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(255,255,255,0.2);flex-wrap:wrap;gap:8px;position:sticky;top:0;z-index:100}
-.hdr-l{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.logo{font-family:var(--fd);font-size:1.15em;font-weight:700;color:white;text-shadow:2px 2px 4px rgba(0,0,0,0.2)}
-.hdr-st{display:flex;gap:8px;flex-wrap:wrap}
-.sbdg{background:rgba(255,255,255,0.25);padding:3px 10px;border-radius:20px;font-size:0.78em;color:white;font-weight:500;white-space:nowrap}
-.nav{display:flex;gap:4px;flex-wrap:wrap}
-.nbtn{background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.3);color:white;padding:5px 11px;border-radius:10px;cursor:pointer;font-size:0.78em;font-family:var(--ff);transition:all 0.2s}
-.nbtn:hover{background:rgba(255,255,255,0.35)}
-.nbtn.on{background:rgba(255,255,255,0.45);font-weight:700}
-
-/* CONTAINERS */
-.cnt{max-width:860px;margin:0 auto;padding:14px}
-.card{background:var(--card);border-radius:20px;padding:18px;margin-bottom:12px;box-shadow:var(--shadow)}
-
-/* BUTTONS */
-.bp{background:linear-gradient(135deg,var(--pri),var(--pri2));color:white;border:none;padding:9px 20px;border-radius:14px;font-size:0.92em;font-weight:600;cursor:pointer;font-family:var(--ff);box-shadow:0 4px 12px rgba(102,126,234,0.4);transition:all 0.2s}
-.bp:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(102,126,234,0.5)}
-.bp:active{transform:translateY(0)}
-.bs{background:white;color:var(--pri);border:2px solid var(--pri);padding:7px 16px;border-radius:14px;font-size:0.88em;font-weight:600;cursor:pointer;font-family:var(--ff);transition:all 0.2s}
-.bs:hover{background:var(--pri);color:white}
-.bg{background:linear-gradient(135deg,#f093fb,#f5576c);color:white;border:none;padding:9px 18px;border-radius:14px;font-size:0.88em;font-weight:600;cursor:pointer;font-family:var(--ff);transition:all 0.2s}
-.bg:hover{transform:scale(1.05)}
-.spk{background:linear-gradient(135deg,#43e97b,#38f9d7);color:#1a5c3a;border:none;padding:5px 12px;border-radius:12px;cursor:pointer;font-size:0.82em;font-weight:600;font-family:var(--ff);transition:all 0.2s}
-.spk:hover{transform:scale(1.1)}
-.spk.lg{font-size:1.1em;padding:9px 18px}
-
-/* WELCOME */
-.welc{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;min-height:100dvh;padding:20px;text-align:center}
-.welc-icon{font-size:4em;animation:bounce 2s infinite}
+html,body,#root{width:100%;min-height:100vh}
+body{font-family:'Noto Sans KR',sans-serif;overflow-x:hidden;-webkit-tap-highlight-color:transparent}
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-thumb{background:rgba(102,126,234,0.3);border-radius:3px}
+@keyframes slideIn{from{opacity:0;transform:translateX(-50%) translateY(-20px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
 @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-15px)}}
-.welc h1{font-family:var(--fd);font-size:2.2em;color:white;text-shadow:3px 3px 6px rgba(0,0,0,0.2);margin:6px 0}
-.welc p{color:rgba(255,255,255,0.9);font-size:1em;margin-bottom:20px;line-height:1.5}
-.welc input{padding:12px 20px;border-radius:16px;border:3px solid rgba(255,255,255,0.5);background:rgba(255,255,255,0.9);font-size:1em;width:240px;text-align:center;font-family:var(--ff);outline:none;margin-bottom:12px}
-.welc input:focus{border-color:#f5576c}
-
-/* SECTIONS */
-.sec{font-family:var(--fd);font-size:1.15em;font-weight:600;margin-bottom:10px;color:#334155}
-
-/* STAGE GRID */
-.sgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
-.scard{background:white;border-radius:20px;padding:20px;text-align:center;cursor:pointer;transition:all 0.3s;border:3px solid transparent;position:relative;overflow:hidden}
-.scard:hover{transform:translateY(-4px);box-shadow:0 12px 30px rgba(0,0,0,0.15)}
-.scard.lk{opacity:0.5;cursor:not-allowed}
-.scard .ico{font-size:2.6em;margin-bottom:5px}
-.scard h3{font-family:var(--fd);font-size:1.1em;margin-bottom:2px}
-.scard p{font-size:0.78em;color:#64748b}
-
-/* XP BAR */
-.xpbg{background:#e2e8f0;border-radius:10px;height:10px;overflow:hidden}
-.xpfl{height:100%;border-radius:10px;background:linear-gradient(90deg,var(--pri),#f093fb);transition:width 0.5s}
-
-/* FLASH CARD */
-.flash{background:linear-gradient(135deg,#ffecd2,#fcb69f);border-radius:24px;padding:24px;text-align:center;min-height:170px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:all 0.3s;margin:12px 0}
-.flash:hover{transform:scale(1.02)}
-.flash .emo{font-size:3em;margin-bottom:8px}
-.flash .wen{font-family:var(--fd);font-size:2.1em;font-weight:700;color:#7c3aed}
-.flash .wko{font-size:1.1em;color:#92400e;margin-top:5px}
-
-/* CATEGORIES */
-.cats{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px}
-.cat{padding:4px 12px;border-radius:12px;border:2px solid #e2e8f0;background:white;cursor:pointer;font-size:0.82em;font-family:var(--ff);transition:all 0.2s}
-.cat.on{background:var(--pri);color:white;border-color:var(--pri)}
-
-/* MATCH GAME */
-.mgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.mcol{display:flex;flex-direction:column;gap:6px}
-.mcol h4{text-align:center;font-size:0.82em;color:#64748b}
-.mitm{padding:9px;border-radius:12px;text-align:center;cursor:pointer;transition:all 0.2s;font-weight:600;font-size:0.88em;border:2px solid #e2e8f0;background:white}
-.mitm:hover{border-color:var(--pri)}
-.mitm.sel{border-color:var(--yellow);background:#fef3c7}
-.mitm.dn{border-color:var(--green);background:#dcfce7;opacity:0.6;pointer-events:none}
-
-/* SENTENCE */
-.sarea{min-height:52px;border:3px dashed #cbd5e1;border-radius:16px;padding:9px;display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:12px 0;background:#f8fafc}
-.sarea.has{border-color:var(--pri)}
-.chip{padding:6px 13px;border-radius:12px;font-weight:600;cursor:pointer;font-family:var(--fd);font-size:1em;transition:all 0.2s;user-select:none}
-.chip:hover{transform:scale(1.05)}
-.chip.src{background:#e0e7ff;color:#3730a3;border:2px solid #a5b4fc}
-.chip.put{background:var(--pri);color:white}
-
-/* QUIZ */
-.qopt{padding:11px;border-radius:14px;border:2px solid #e2e8f0;background:white;cursor:pointer;font-size:0.95em;font-weight:500;font-family:var(--ff);text-align:center;transition:all 0.2s}
-.qopt:hover{border-color:var(--pri);background:#eef2ff}
-.qopt.ok{border-color:var(--green);background:#dcfce7}
-.qopt.no{border-color:var(--red);background:#fee2e2}
-.qpbg{background:#e2e8f0;border-radius:10px;height:6px;flex:1;margin:0 12px;overflow:hidden}
-.qpfl{height:100%;background:linear-gradient(90deg,var(--pri),#f093fb);border-radius:10px;transition:width 0.3s}
-
-/* HINTS */
-.hint{background:#fef3c7;border:2px solid #fcd34d;border-radius:12px;padding:8px 12px;font-size:0.85em;margin:6px 0;color:#92400e}
-.rule{background:#ede9fe;border:2px solid #c4b5fd;border-radius:12px;padding:8px 12px;font-size:0.85em;margin:6px 0;color:#5b21b6}
-
-/* STATS GRID */
-.stgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:12px}
-.stcard{background:white;border-radius:16px;padding:12px;text-align:center;box-shadow:var(--shadow)}
-.stval{font-family:var(--fd);font-size:1.7em;font-weight:700;color:var(--pri)}
-.stlbl{font-size:0.78em;color:#64748b;margin-top:2px}
-
-/* TABLE */
-.stbl{width:100%;border-collapse:separate;border-spacing:0}
-.stbl th{background:var(--pri);color:white;padding:8px 9px;text-align:left;font-size:0.78em;white-space:nowrap}
-.stbl th:first-child{border-radius:12px 0 0 0}
-.stbl th:last-child{border-radius:0 12px 0 0}
-.stbl td{padding:8px 9px;border-bottom:1px solid #e2e8f0;font-size:0.85em;white-space:nowrap}
-.stbl tr:hover td{background:#f1f5f9}
-
-/* BARS */
-.barc{display:flex;align-items:flex-end;gap:6px;height:140px;padding:5px 0}
-.bari{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px}
-.bar{width:100%;max-width:36px;border-radius:8px 8px 0 0;transition:height 0.5s}
-.barl{font-size:0.65em;color:#64748b;text-align:center}
-
-/* BADGES */
-.bgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(105px,1fr));gap:8px}
-.bcard{text-align:center;padding:12px 5px;border-radius:16px;border:2px solid #e2e8f0;transition:all 0.2s}
-.bcard.on{border-color:var(--yellow);background:#fffbeb}
-.bcard.off{opacity:0.4;filter:grayscale(1)}
-
-/* LEADERBOARD */
-.lb{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:12px;margin-bottom:6px;background:white;border:2px solid #e2e8f0}
-.lb.t1{border-color:#fbbf24;background:#fffbeb}
-.lb.t2{border-color:#9ca3af;background:#f9fafb}
-.lb.t3{border-color:#d97706;background:#fffbeb}
-
-/* ALPHA GRID */
-.agrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(36px,1fr));gap:4px;margin-top:12px}
-.acell{width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:10px;font-family:var(--fd);font-weight:600;font-size:0.95em;cursor:pointer;transition:all 0.2s;border:2px solid #e2e8f0}
-.acell:hover{transform:scale(1.1);border-color:var(--pri)}
-.acell.cur{background:var(--pri);color:white;border-color:var(--pri)}
-.acell.ok{background:#dcfce7;border-color:#86efac}
-
-/* ACTIVITY */
-.actg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
-.actb{padding:13px;border-radius:16px;border:2px solid #e2e8f0;background:white;cursor:pointer;transition:all 0.2s;text-align:center}
-.actb:hover{border-color:var(--pri);transform:translateY(-3px);box-shadow:0 8px 20px rgba(0,0,0,0.1)}
-
-/* TOAST */
-.toast{position:fixed;top:14px;left:50%;transform:translateX(-50%);padding:11px 22px;border-radius:16px;font-weight:600;z-index:1000;max-width:88%;text-align:center;font-family:var(--ff);font-size:0.9em;animation:sld 0.3s ease;pointer-events:none}
-.toast.success{background:#dcfce7;color:#166534;border:2px solid #86efac}
-.toast.error{background:#fee2e2;color:#991b1b;border:2px solid #fca5a5}
-.toast.levelup{background:#fef3c7;color:#92400e;border:2px solid #fcd34d;font-size:1em}
-.toast.badge{background:#ede9fe;color:#5b21b6;border:2px solid #c4b5fd}
-@keyframes sld{from{opacity:0;transform:translateX(-50%) translateY(-20px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
-
-/* BACK */
-.back{background:rgba(255,255,255,0.2);border:none;color:white;padding:5px 13px;border-radius:10px;cursor:pointer;font-family:var(--ff);font-size:0.85em;margin-bottom:12px}
-.back:hover{background:rgba(255,255,255,0.3)}
-
-/* DASH TAB */
-.dtab{padding:6px 14px;border-radius:12px;border:none;background:rgba(255,255,255,0.2);color:white;cursor:pointer;font-family:var(--ff);font-weight:500;font-size:0.82em;transition:all 0.2s}
-.dtab.on{background:rgba(255,255,255,0.45);font-weight:700}
-
-/* QR SECTION */
-.qr-wrap{background:white;border-radius:16px;padding:16px;text-align:center;margin-top:12px}
-.qr-wrap canvas{border-radius:8px}
-
-/* RESPONSIVE */
-@media(max-width:480px){
-  .hdr{padding:8px 10px}
-  .logo{font-size:1em}
-  .sbdg{font-size:0.72em;padding:2px 8px}
-  .nbtn{font-size:0.72em;padding:4px 8px}
-  .cnt{padding:10px}
-  .card{padding:14px;border-radius:16px}
-  .welc h1{font-size:1.8em}
-  .sgrid{grid-template-columns:repeat(2,1fr);gap:8px}
-  .scard{padding:14px}
-  .flash{padding:18px;min-height:140px}
-  .flash .wen{font-size:1.7em}
-  .mgrid{gap:8px}
-  .stgrid{grid-template-columns:repeat(2,1fr)}
-}
 </style>
 </head>
 <body>
 <div id="root"></div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
-<script type="text/babel">
-const {useState,useEffect,useRef,useCallback}=React;
-
-const STAGES=[
-  {id:1,name:"알파벳 마을",icon:"🏘️",desc:"알파벳을 배우고 직접 써보자!",color:"#4CAF50",uxp:0},
-  {id:2,name:"단어의 숲",icon:"🌲",desc:"기본 영어 단어를 마스터!",color:"#2196F3",uxp:100},
-  {id:3,name:"문장의 다리",icon:"🌉",desc:"단어를 연결해 문장을 만들자!",color:"#FF9800",uxp:300},
-  {id:4,name:"문법의 성",icon:"🏰",desc:"영어 문법의 기초를 정복!",color:"#9C27B0",uxp:600},
-];
-
-const BADGES=[
-  {id:"fs",name:"첫 발걸음",icon:"👣",desc:"첫 퀴즈",c:s=>s.qc>=1},
-  {id:"w50",name:"단어 사냥꾼",icon:"🎯",desc:"단어 50개",c:s=>s.wl>=50},
-  {id:"s3",name:"3일 연속",icon:"🔥",desc:"3일 연속",c:s=>s.sk>=3},
-  {id:"s7",name:"주간 챔피언",icon:"⭐",desc:"7일 연속",c:s=>s.sk>=7},
-  {id:"pf",name:"퍼펙트",icon:"💎",desc:"만점",c:s=>s.ps>=1},
-  {id:"ex",name:"탐험가",icon:"🧭",desc:"모든 스테이지",c:s=>s.sv>=4},
-  {id:"st",name:"문장 장인",icon:"📝",desc:"문장 10회",c:s=>s.sb>=10},
-  {id:"l10",name:"Lv.10",icon:"🏆",desc:"레벨 10",c:s=>s.lv>=10},
-];
-
-const AL="ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").map((l,i)=>({u:l,lo:l.toLowerCase(),w:["Apple","Bear","Cat","Dog","Elephant","Fish","Grape","Hat","Ice cream","Jelly","Kite","Lion","Moon","Nest","Orange","Penguin","Queen","Rabbit","Sun","Tree","Umbrella","Violin","Water","X-ray","Yoga","Zebra"][i],e:["🍎","🐻","🐱","🐶","🐘","🐟","🍇","🎩","🍦","🍬","🪁","🦁","🌙","🪺","🍊","🐧","👑","🐰","☀️","🌳","☂️","🎻","💧","📡","🧘","🦓"][i]}));
-
-const WD={
-  animals:[{en:"cat",ko:"고양이",e:"🐱"},{en:"dog",ko:"개",e:"🐶"},{en:"bird",ko:"새",e:"🐦"},{en:"fish",ko:"물고기",e:"🐟"},{en:"rabbit",ko:"토끼",e:"🐰"},{en:"bear",ko:"곰",e:"🐻"},{en:"lion",ko:"사자",e:"🦁"},{en:"elephant",ko:"코끼리",e:"🐘"},{en:"monkey",ko:"원숭이",e:"🐵"},{en:"horse",ko:"말",e:"🐴"}],
-  food:[{en:"apple",ko:"사과",e:"🍎"},{en:"bread",ko:"빵",e:"🍞"},{en:"milk",ko:"우유",e:"🥛"},{en:"rice",ko:"밥",e:"🍚"},{en:"water",ko:"물",e:"💧"},{en:"egg",ko:"달걀",e:"🥚"},{en:"cake",ko:"케이크",e:"🎂"},{en:"pizza",ko:"피자",e:"🍕"},{en:"banana",ko:"바나나",e:"🍌"},{en:"orange",ko:"오렌지",e:"🍊"}],
-  colors:[{en:"red",ko:"빨간색",e:"🔴"},{en:"blue",ko:"파란색",e:"🔵"},{en:"green",ko:"초록색",e:"🟢"},{en:"yellow",ko:"노란색",e:"🟡"},{en:"black",ko:"검은색",e:"⚫"},{en:"white",ko:"하얀색",e:"⚪"},{en:"pink",ko:"분홍색",e:"🩷"},{en:"purple",ko:"보라색",e:"🟣"}],
-  body:[{en:"head",ko:"머리",e:"🗣️"},{en:"hand",ko:"손",e:"✋"},{en:"eye",ko:"눈",e:"👁️"},{en:"ear",ko:"귀",e:"👂"},{en:"nose",ko:"코",e:"👃"},{en:"mouth",ko:"입",e:"👄"},{en:"foot",ko:"발",e:"🦶"},{en:"arm",ko:"팔",e:"💪"}],
-  numbers:[{en:"one",ko:"1",e:"1️⃣"},{en:"two",ko:"2",e:"2️⃣"},{en:"three",ko:"3",e:"3️⃣"},{en:"four",ko:"4",e:"4️⃣"},{en:"five",ko:"5",e:"5️⃣"},{en:"six",ko:"6",e:"6️⃣"},{en:"seven",ko:"7",e:"7️⃣"},{en:"eight",ko:"8",e:"8️⃣"},{en:"nine",ko:"9",e:"9️⃣"},{en:"ten",ko:"10",e:"🔟"}],
+<script>
+const {
+  useState,
+  useEffect,
+  useRef,
+  useCallback
+} = React;
+const LS = {
+  save: function (k, v) {
+    try {
+      localStorage.setItem('eq_' + k, JSON.stringify(v));
+    } catch (e) {}
+  },
+  load: function (k, d) {
+    try {
+      var v = localStorage.getItem('eq_' + k);
+      return v ? JSON.parse(v) : d || null;
+    } catch (e) {
+      return d || null;
+    }
+  },
+  remove: function (k) {
+    try {
+      localStorage.removeItem('eq_' + k);
+    } catch (e) {}
+  }
 };
-
-const SN=[
-  {p:["I","am","a","student"],ko:"나는 학생입니다.",h:"나/~이다/하나의/학생"},
-  {p:["She","is","my","friend"],ko:"그녀는 내 친구입니다.",h:"그녀/~이다/나의/친구"},
-  {p:["I","like","apples"],ko:"나는 사과를 좋아합니다.",h:"나/좋아하다/사과들"},
-  {p:["He","is","tall"],ko:"그는 키가 큽니다.",h:"그/~이다/키가큰"},
-  {p:["We","go","to","school"],ko:"우리는 학교에 갑니다.",h:"우리/가다/~로/학교"},
-  {p:["They","play","soccer"],ko:"그들은 축구를 합니다.",h:"그들/하다/축구"},
-  {p:["This","is","a","book"],ko:"이것은 책입니다.",h:"이것/~이다/하나의/책"},
-  {p:["I","have","two","cats"],ko:"고양이 두 마리가 있습니다.",h:"나/가지다/두/고양이들"},
-  {p:["She","reads","a","book"],ko:"그녀는 책을 읽습니다.",h:"그녀/읽다/하나의/책"},
-  {p:["We","eat","lunch"],ko:"우리는 점심을 먹습니다.",h:"우리/먹다/점심"},
-];
-
-const GR=[
-  {s:"I ___ a student.",o:["am","is","are"],a:0,r:"I + am",ko:"나는 학생입니다."},
-  {s:"She ___ happy.",o:["am","is","are"],a:1,r:"She/He/It + is",ko:"그녀는 행복합니다."},
-  {s:"They ___ friends.",o:["am","is","are"],a:2,r:"They/We/You + are",ko:"그들은 친구입니다."},
-  {s:"He ___ a dog.",o:["have","has","having"],a:1,r:"He/She/It + has",ko:"그는 개가 있습니다."},
-  {s:"I ___ to school.",o:["go","goes","going"],a:0,r:"I/You/We/They + 원형",ko:"나는 학교에 갑니다."},
-  {s:"She ___ English.",o:["study","studies","studying"],a:1,r:"3인칭 + -s/es",ko:"그녀는 영어를 공부합니다."},
-  {s:"We ___ lunch now.",o:["eat","eats","are eating"],a:2,r:"현재진행: be + -ing",ko:"지금 점심을 먹고 있습니다."},
-  {s:"___ is your name?",o:["Who","What","Where"],a:1,r:"What = 무엇",ko:"이름이 무엇이니?"},
-  {s:"___ do you live?",o:["Who","What","Where"],a:2,r:"Where = 어디",ko:"어디에 사니?"},
-  {s:"I ___ not like bugs.",o:["do","does","am"],a:0,r:"I + do not",ko:"벌레를 안 좋아해."},
-];
-
-const SAMPLE=[
-  {name:"김민수",xp:450,lv:5,sk:7,qc:12,wl:65,tc:108,ta:130,ll:"03-25"},
-  {name:"이서연",xp:680,lv:7,sk:14,qc:18,wl:92,tc:165,ta:180,ll:"03-25"},
-  {name:"박지훈",xp:220,lv:3,sk:2,qc:5,wl:28,tc:42,ta:65,ll:"03-24"},
-  {name:"최유진",xp:890,lv:9,sk:21,qc:24,wl:120,tc:210,ta:225,ll:"03-25"},
-  {name:"정하윤",xp:150,lv:2,sk:1,qc:3,wl:15,tc:22,ta:38,ll:"03-23"},
-  {name:"강도윤",xp:340,lv:4,sk:5,qc:9,wl:47,tc:78,ta:98,ll:"03-25"},
-];
-
-const spk=(t,r=0.85)=>{if(!window.speechSynthesis)return;window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang="en-US";u.rate=r;u.pitch=1;const v=window.speechSynthesis.getVoices();const ev=v.find(x=>x.lang.startsWith("en")&&x.name.includes("Google"))||v.find(x=>x.lang.startsWith("en-US"))||v.find(x=>x.lang.startsWith("en"));if(ev)u.voice=ev;window.speechSynthesis.speak(u);};
-const xpF=lv=>lv*50+(lv-1)*20;
-
-const SB=({t,sz,lb})=><button className={`spk ${sz||""}`} onClick={()=>spk(t)} title={`"${t}" 발음`}>🔊 {lb||""}</button>;
-
-const WC=({letter,onDone})=>{
-  const cr=useRef(null),dr=useRef(false);
-  const[hd,setHd]=useState(false);
-  const gp=e=>{const c=cr.current,r=c.getBoundingClientRect(),sx=c.width/r.width,sy=c.height/r.height;if(e.touches)return{x:(e.touches[0].clientX-r.left)*sx,y:(e.touches[0].clientY-r.top)*sy};return{x:(e.clientX-r.left)*sx,y:(e.clientY-r.top)*sy};};
-  const sd=e=>{e.preventDefault();const ctx=cr.current.getContext("2d"),p=gp(e);ctx.beginPath();ctx.moveTo(p.x,p.y);dr.current=true;};
-  const mv=e=>{e.preventDefault();if(!dr.current)return;const ctx=cr.current.getContext("2d"),p=gp(e);ctx.lineWidth=6;ctx.lineCap="round";ctx.lineJoin="round";ctx.strokeStyle="#2563eb";ctx.lineTo(p.x,p.y);ctx.stroke();setHd(true);};
-  const ed=()=>{dr.current=false;};
-  const dg=useCallback((ctx,l)=>{ctx.clearRect(0,0,300,300);ctx.strokeStyle="#e5e7eb";ctx.lineWidth=1;ctx.setLineDash([5,5]);ctx.beginPath();ctx.moveTo(150,0);ctx.lineTo(150,300);ctx.moveTo(0,150);ctx.lineTo(300,150);ctx.stroke();ctx.setLineDash([]);ctx.font="200px 'Fredoka',sans-serif";ctx.fillStyle="rgba(200,200,200,0.3)";ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText(l,150,155);},[]);
-  const cl=()=>{dg(cr.current.getContext("2d"),letter);setHd(false);};
-  useEffect(()=>{dg(cr.current.getContext("2d"),letter);setHd(false);},[letter,dg]);
-  return<div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:12,marginTop:14}}>
-    <canvas ref={cr} width={300} height={300} onMouseDown={sd} onMouseMove={mv} onMouseUp={ed} onMouseLeave={ed} onTouchStart={sd} onTouchMove={mv} onTouchEnd={ed} style={{border:"3px dashed #cbd5e1",borderRadius:16,cursor:"crosshair",touchAction:"none",background:"#fff",width:"100%",maxWidth:260,aspectRatio:"1"}}/>
-    <div style={{display:"flex",gap:10}}>
-      <button className="bs" onClick={cl}>🗑️ 지우기</button>
-      {hd&&<button className="bp" onClick={onDone}>✅ 완료!</button>}
-    </div>
-  </div>;
+const STAGES = [{
+  id: 1,
+  name: "알파벳 마을",
+  icon: "🏘️",
+  desc: "알파벳을 배우고 직접 써보자!",
+  color: "#4CAF50",
+  unlockXP: 0
+}, {
+  id: 2,
+  name: "단어의 숲",
+  icon: "🌲",
+  desc: "기본 영어 단어를 마스터하자!",
+  color: "#2196F3",
+  unlockXP: 100
+}, {
+  id: 3,
+  name: "문장의 다리",
+  icon: "🌉",
+  desc: "단어를 연결해 문장을 만들자!",
+  color: "#FF9800",
+  unlockXP: 300
+}, {
+  id: 4,
+  name: "문법의 성",
+  icon: "🏰",
+  desc: "영어 문법의 기초를 정복하자!",
+  color: "#9C27B0",
+  unlockXP: 600
+}];
+const BADGES = [{
+  id: "f",
+  name: "첫 발걸음",
+  icon: "👣",
+  desc: "첫 퀴즈 완료",
+  cond: function (s) {
+    return s.qc >= 1;
+  }
+}, {
+  id: "w",
+  name: "단어 사냥꾼",
+  icon: "🎯",
+  desc: "단어 50개",
+  cond: function (s) {
+    return s.wl >= 50;
+  }
+}, {
+  id: "s3",
+  name: "3일 연속",
+  icon: "🔥",
+  desc: "3일 연속 학습",
+  cond: function (s) {
+    return s.sk >= 3;
+  }
+}, {
+  id: "s7",
+  name: "주간 챔피언",
+  icon: "⭐",
+  desc: "7일 연속",
+  cond: function (s) {
+    return s.sk >= 7;
+  }
+}, {
+  id: "p",
+  name: "퍼펙트",
+  icon: "💎",
+  desc: "만점 달성",
+  cond: function (s) {
+    return s.ps >= 1;
+  }
+}, {
+  id: "e",
+  name: "탐험가",
+  icon: "🧭",
+  desc: "모든 스테이지",
+  cond: function (s) {
+    return s.sv >= 4;
+  }
+}, {
+  id: "t",
+  name: "문장 장인",
+  icon: "📝",
+  desc: "문장 10회",
+  cond: function (s) {
+    return s.sb >= 10;
+  }
+}, {
+  id: "l",
+  name: "Lv.10",
+  icon: "🏆",
+  desc: "레벨 10",
+  cond: function (s) {
+    return s.lv >= 10;
+  }
+}];
+const ALPHA = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").map(function (l, i) {
+  return {
+    u: l,
+    lo: l.toLowerCase(),
+    w: ["Apple", "Bear", "Cat", "Dog", "Elephant", "Fish", "Grape", "Hat", "Ice cream", "Jelly", "Kite", "Lion", "Moon", "Nest", "Orange", "Penguin", "Queen", "Rabbit", "Sun", "Tree", "Umbrella", "Violin", "Water", "X-ray", "Yoga", "Zebra"][i],
+    e: ["🍎", "🐻", "🐱", "🐶", "🐘", "🐟", "🍇", "🎩", "🍦", "🍬", "🪁", "🦁", "🌙", "🪺", "🍊", "🐧", "👑", "🐰", "☀️", "🌳", "☂️", "🎻", "💧", "📡", "🧘", "🦓"][i]
+  };
+});
+const WORDS = {
+  animals: [{
+    en: "cat",
+    ko: "고양이",
+    e: "🐱"
+  }, {
+    en: "dog",
+    ko: "개",
+    e: "🐶"
+  }, {
+    en: "bird",
+    ko: "새",
+    e: "🐦"
+  }, {
+    en: "fish",
+    ko: "물고기",
+    e: "🐟"
+  }, {
+    en: "rabbit",
+    ko: "토끼",
+    e: "🐰"
+  }, {
+    en: "bear",
+    ko: "곰",
+    e: "🐻"
+  }, {
+    en: "lion",
+    ko: "사자",
+    e: "🦁"
+  }, {
+    en: "elephant",
+    ko: "코끼리",
+    e: "🐘"
+  }, {
+    en: "monkey",
+    ko: "원숭이",
+    e: "🐵"
+  }, {
+    en: "horse",
+    ko: "말",
+    e: "🐴"
+  }],
+  food: [{
+    en: "apple",
+    ko: "사과",
+    e: "🍎"
+  }, {
+    en: "bread",
+    ko: "빵",
+    e: "🍞"
+  }, {
+    en: "milk",
+    ko: "우유",
+    e: "🥛"
+  }, {
+    en: "rice",
+    ko: "쌀/밥",
+    e: "🍚"
+  }, {
+    en: "water",
+    ko: "물",
+    e: "💧"
+  }, {
+    en: "egg",
+    ko: "달걀",
+    e: "🥚"
+  }, {
+    en: "cake",
+    ko: "케이크",
+    e: "🎂"
+  }, {
+    en: "pizza",
+    ko: "피자",
+    e: "🍕"
+  }, {
+    en: "banana",
+    ko: "바나나",
+    e: "🍌"
+  }, {
+    en: "orange",
+    ko: "오렌지",
+    e: "🍊"
+  }],
+  colors: [{
+    en: "red",
+    ko: "빨간색",
+    e: "🔴"
+  }, {
+    en: "blue",
+    ko: "파란색",
+    e: "🔵"
+  }, {
+    en: "green",
+    ko: "초록색",
+    e: "🟢"
+  }, {
+    en: "yellow",
+    ko: "노란색",
+    e: "🟡"
+  }, {
+    en: "black",
+    ko: "검은색",
+    e: "⚫"
+  }, {
+    en: "white",
+    ko: "하얀색",
+    e: "⚪"
+  }, {
+    en: "pink",
+    ko: "분홍색",
+    e: "🩷"
+  }, {
+    en: "purple",
+    ko: "보라색",
+    e: "🟣"
+  }],
+  body: [{
+    en: "head",
+    ko: "머리",
+    e: "🗣️"
+  }, {
+    en: "hand",
+    ko: "손",
+    e: "✋"
+  }, {
+    en: "eye",
+    ko: "눈",
+    e: "👁️"
+  }, {
+    en: "ear",
+    ko: "귀",
+    e: "👂"
+  }, {
+    en: "nose",
+    ko: "코",
+    e: "👃"
+  }, {
+    en: "mouth",
+    ko: "입",
+    e: "👄"
+  }, {
+    en: "foot",
+    ko: "발",
+    e: "🦶"
+  }, {
+    en: "arm",
+    ko: "팔",
+    e: "💪"
+  }],
+  numbers: [{
+    en: "one",
+    ko: "1",
+    e: "1️⃣"
+  }, {
+    en: "two",
+    ko: "2",
+    e: "2️⃣"
+  }, {
+    en: "three",
+    ko: "3",
+    e: "3️⃣"
+  }, {
+    en: "four",
+    ko: "4",
+    e: "4️⃣"
+  }, {
+    en: "five",
+    ko: "5",
+    e: "5️⃣"
+  }, {
+    en: "six",
+    ko: "6",
+    e: "6️⃣"
+  }, {
+    en: "seven",
+    ko: "7",
+    e: "7️⃣"
+  }, {
+    en: "eight",
+    ko: "8",
+    e: "8️⃣"
+  }, {
+    en: "nine",
+    ko: "9",
+    e: "9️⃣"
+  }, {
+    en: "ten",
+    ko: "10",
+    e: "🔟"
+  }]
 };
-
-function App(){
-  const[v,setV]=useState("welcome");
-  const[st,setSt]=useState(null);
-  const[ni,setNi]=useState("");
-  const[cs,setCs]=useState(null);
-  const[sv,setSv]=useState(null);
-  const[msg,setMsg]=useState(null);
-  const[ai,setAi]=useState(0);
-  const[wc,setWc]=useState("animals");
-  const[wi,setWi]=useState(0);
-  const[swa,setSwa]=useState(false);
-  const[mg,setMg]=useState(null);
-  const[si,setSi]=useState(0);
-  const[sp2,setSp2]=useState([]);
-  const[sa,setSa]=useState([]);
-  const[gi,setGi]=useState(0);
-  const[gs,setGs]=useState(null);
-  const[qq,setQq]=useState([]);
-  const[qi,setQi]=useState(0);
-  const[qs,setQs]=useState(0);
-  const[qa,setQa]=useState(false);
-  const[sr,setSr]=useState(null);
-  const[dt,setDt]=useState("overview");
-
-  const sm=(t,tp="success")=>{setMsg({t,tp});setTimeout(()=>setMsg(null),2500);};
-  const axp=amt=>{setSt(p=>{const nx=p.xp+amt;let nl=p.lv;while(nx>=xpF(nl+1))nl++;if(nl>p.lv)setTimeout(()=>sm(`🎉 레벨 UP! Lv.${nl}`,"levelup"),300);return{...p,xp:nx,lv:nl};});};
-
-  // localStorage로 데이터 저장/불러오기
-  useEffect(()=>{
-    const saved=localStorage.getItem("eq_student");
-    if(saved){try{const d=JSON.parse(saved);if(d.name){setSt(d);setV("map");}}catch(e){}}
-  },[]);
-  useEffect(()=>{if(st)localStorage.setItem("eq_student",JSON.stringify(st));},[st]);
-
-  useEffect(()=>{if(!st)return;BADGES.forEach(b=>{if(!st.badges.includes(b.id)&&b.c(st)){setSt(p=>({...p,badges:[...p.badges,b.id]}));sm(`🏅 배지: ${b.name}!`,"badge");}});},[st?.xp,st?.qc,st?.wl]);
-  useEffect(()=>{window.speechSynthesis?.getVoices();},[]);
-
-  const go=()=>{if(!ni.trim())return;const s={name:ni.trim(),xp:0,lv:1,sk:1,qc:0,wl:0,ps:0,sv:0,sb:0,badges:[],ap:{},tc:0,ta:0};setSt(s);setV("map");sm(`환영, ${ni.trim()}! 🚀`);};
-  const logout=()=>{localStorage.removeItem("eq_student");setSt(null);setV("welcome");setNi("");};
-  const enter=s=>{if(st.xp<s.uxp){sm(`XP ${s.uxp} 필요!`,"error");return;}setCs(s);setSv(null);setV("stage");setSt(p=>({...p,sv:Math.max(p.sv,s.id)}));};
-
-  const smg=()=>{const w=WD[wc].slice(0,6);setMg({w,sk:[...w].sort(()=>Math.random()-0.5),sel:null,m:[],at:0});setSv("match");};
-  const hm=(tp,ix)=>{if(!mg)return;if(!mg.sel){setMg(p=>({...p,sel:{tp,ix}}));return;}const s=mg.sel;if(s.tp===tp){setMg(p=>({...p,sel:{tp,ix}}));return;}const ew=tp==="en"?mg.w[ix]:mg.w[s.ix];const kw=tp==="ko"?mg.sk[ix]:mg.sk[s.ix];if(ew.en===kw.en){const nm=[...mg.m,ew.en];setMg(p=>({...p,m:nm,sel:null,at:p.at+1}));spk(ew.en);if(nm.length===mg.w.length){axp(30);sm("🎉 매칭 완료! +30XP");setSt(p=>({...p,wl:p.wl+6}));}}else{setMg(p=>({...p,sel:null,at:p.at+1}));sm("❌ 다시!","error");}};
-
-  const ssent=ix=>{setSi(ix);setSp2([...SN[ix].p].sort(()=>Math.random()-0.5));setSa([]);setSv("sentence");};
-  const csent=()=>{if(JSON.stringify(sa)===JSON.stringify(SN[si].p)){axp(20);spk(SN[si].p.join(" "));sm("🎉 정답! +20XP");setSt(p=>({...p,sb:p.sb+1,tc:p.tc+1,ta:p.ta+1}));}else{sm("❌ 다시 시도!","error");setSt(p=>({...p,ta:p.ta+1}));}};
-
-  const sqz=()=>{const qs2=[];const aw=Object.values(WD).flat();for(let i=0;i<4;i++){const w=aw[Math.floor(Math.random()*aw.length)];const o=[...aw.filter(x=>x.en!==w.en).sort(()=>Math.random()-0.5).slice(0,3).map(x=>x.ko),w.ko].sort(()=>Math.random()-0.5);qs2.push({tp:"word",q:`"${w.en}"의 뜻은?`,o,a:o.indexOf(w.ko),sp:w.en});}for(let i=0;i<3;i++){const g=GR[Math.floor(Math.random()*GR.length)];qs2.push({tp:"gram",q:g.s,o:g.o,a:g.a,r:g.r,ko:g.ko});}for(let i=0;i<3;i++){const w=aw[Math.floor(Math.random()*aw.length)];const o=[...aw.filter(x=>x.en!==w.en).sort(()=>Math.random()-0.5).slice(0,3).map(x=>x.en),w.en].sort(()=>Math.random()-0.5);qs2.push({tp:"listen",q:"🔊 듣고 맞는 단어 고르기",o,a:o.indexOf(w.en),sp:w.en});}setQq(qs2.sort(()=>Math.random()-0.5));setQi(0);setQs(0);setQa(false);setSr(null);setV("quiz");};
-  const aqz=oi=>{if(qa)return;setQa(true);const q=qq[qi];setSr(oi===q.a?"ok":"no");if(oi===q.a)setQs(p=>p+1);if(q.sp)spk(q.sp);};
-  const nqz=()=>{if(qi+1>=qq.length){axp(qs*10);setSt(p=>({...p,qc:p.qc+1,ps:p.ps+(qs===qq.length?1:0),tc:p.tc+qs,ta:p.ta+qq.length}));setV("result");return;}setQi(p=>p+1);setQa(false);setSr(null);};
-
-  const nlx=st?xpF(st.lv+1):0;const plx=st?xpF(st.lv):0;const xpp=st?Math.max(0,Math.min(100,((st.xp-plx)/(nlx-plx))*100)):0;
-
-  const Toast=()=>msg&&<div className={`toast ${msg.tp}`}>{msg.t}</div>;
-
-  const Hdr=()=><div className="hdr">
-    <div className="hdr-l">
-      <span className="logo">🏰 English Quest</span>
-      <div className="hdr-st"><span className="sbdg">⭐Lv.{st.lv}</span><span className="sbdg">✨{st.xp}XP</span><span className="sbdg">🔥{st.sk}일</span></div>
-    </div>
-    <div className="nav">
-      <button className={`nbtn ${v==="map"?"on":""}`} onClick={()=>{setV("map");setSv(null);}}>🗺️맵</button>
-      <button className="nbtn" onClick={sqz}>📝퀴즈</button>
-      <button className={`nbtn ${v==="profile"?"on":""}`} onClick={()=>setV("profile")}>🎖️프로필</button>
-      <button className={`nbtn ${v==="lb"?"on":""}`} onClick={()=>setV("lb")}>🏆순위</button>
-      <button className="nbtn" onClick={logout}>🚪나가기</button>
-    </div>
-  </div>;
+const SENTS = [{
+  p: ["I", "am", "a", "student"],
+  ko: "나는 학생입니다.",
+  h: "나 / ~이다 / 하나의 / 학생"
+}, {
+  p: ["She", "is", "my", "friend"],
+  ko: "그녀는 내 친구입니다.",
+  h: "그녀 / ~이다 / 나의 / 친구"
+}, {
+  p: ["I", "like", "apples"],
+  ko: "나는 사과를 좋아합니다.",
+  h: "나 / 좋아하다 / 사과들"
+}, {
+  p: ["He", "is", "tall"],
+  ko: "그는 키가 큽니다.",
+  h: "그 / ~이다 / 키가 큰"
+}, {
+  p: ["We", "go", "to", "school"],
+  ko: "우리는 학교에 갑니다.",
+  h: "우리 / 가다 / ~로 / 학교"
+}, {
+  p: ["They", "play", "soccer"],
+  ko: "그들은 축구를 합니다.",
+  h: "그들 / 하다 / 축구"
+}, {
+  p: ["This", "is", "a", "book"],
+  ko: "이것은 책입니다.",
+  h: "이것 / ~이다 / 하나의 / 책"
+}, {
+  p: ["I", "have", "two", "cats"],
+  ko: "나는 고양이 두 마리.",
+  h: "나 / 가지다 / 두 / 고양이들"
+}, {
+  p: ["She", "reads", "a", "book"],
+  ko: "그녀는 책을 읽습니다.",
+  h: "그녀 / 읽다 / 하나의 / 책"
+}, {
+  p: ["We", "eat", "lunch"],
+  ko: "우리는 점심을 먹습니다.",
+  h: "우리 / 먹다 / 점심"
+}];
+const GRAM = [{
+  s: "I ___ a student.",
+  o: ["am", "is", "are"],
+  a: 0,
+  r: "I + am",
+  ko: "나는 학생입니다."
+}, {
+  s: "She ___ happy.",
+  o: ["am", "is", "are"],
+  a: 1,
+  r: "She/He/It + is",
+  ko: "그녀는 행복합니다."
+}, {
+  s: "They ___ friends.",
+  o: ["am", "is", "are"],
+  a: 2,
+  r: "They/We/You + are",
+  ko: "그들은 친구입니다."
+}, {
+  s: "He ___ a dog.",
+  o: ["have", "has", "having"],
+  a: 1,
+  r: "He/She/It + has",
+  ko: "그는 개가 있습니다."
+}, {
+  s: "I ___ to school.",
+  o: ["go", "goes", "going"],
+  a: 0,
+  r: "I/You/We/They + 원형",
+  ko: "나는 학교에 갑니다."
+}, {
+  s: "She ___ English.",
+  o: ["study", "studies", "studying"],
+  a: 1,
+  r: "She/He/It + -s/es",
+  ko: "그녀는 영어를 공부합니다."
+}, {
+  s: "We ___ lunch now.",
+  o: ["eat", "eats", "are eating"],
+  a: 2,
+  r: "현재진행: be + -ing",
+  ko: "지금 점심을 먹고 있습니다."
+}, {
+  s: "___ is your name?",
+  o: ["Who", "What", "Where"],
+  a: 1,
+  r: "What = 무엇",
+  ko: "이름이 무엇이니?"
+}, {
+  s: "___ do you live?",
+  o: ["Who", "What", "Where"],
+  a: 2,
+  r: "Where = 어디",
+  ko: "어디에 사니?"
+}, {
+  s: "I ___ not like bugs.",
+  o: ["do", "does", "am"],
+  a: 0,
+  r: "I + do not",
+  ko: "벌레를 안 좋아해."
+}];
+const SAMPLE = [{
+  name: "김민수",
+  xp: 450,
+  lv: 5,
+  sk: 7,
+  qc: 12,
+  wl: 65,
+  tc: 108,
+  ta: 130,
+  ll: "03-25"
+}, {
+  name: "이서연",
+  xp: 680,
+  lv: 7,
+  sk: 14,
+  qc: 18,
+  wl: 92,
+  tc: 165,
+  ta: 180,
+  ll: "03-25"
+}, {
+  name: "박지훈",
+  xp: 220,
+  lv: 3,
+  sk: 2,
+  qc: 5,
+  wl: 28,
+  tc: 42,
+  ta: 65,
+  ll: "03-24"
+}, {
+  name: "최유진",
+  xp: 890,
+  lv: 9,
+  sk: 21,
+  qc: 24,
+  wl: 120,
+  tc: 210,
+  ta: 225,
+  ll: "03-25"
+}, {
+  name: "정하윤",
+  xp: 150,
+  lv: 2,
+  sk: 1,
+  qc: 3,
+  wl: 15,
+  tc: 22,
+  ta: 38,
+  ll: "03-23"
+}, {
+  name: "강도윤",
+  xp: 340,
+  lv: 4,
+  sk: 5,
+  qc: 9,
+  wl: 47,
+  tc: 78,
+  ta: 98,
+  ll: "03-25"
+}];
+var speak = function (t, r) {
+  if (!window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  var u = new SpeechSynthesisUtterance(t);
+  u.lang = "en-US";
+  u.rate = r || 0.85;
+  u.pitch = 1;
+  var vs = window.speechSynthesis.getVoices();
+  var ev = vs.find(function (x) {
+    return x.lang.startsWith("en") && x.name.includes("Google");
+  }) || vs.find(function (x) {
+    return x.lang.startsWith("en-US");
+  }) || vs.find(function (x) {
+    return x.lang.startsWith("en");
+  });
+  if (ev) u.voice = ev;
+  window.speechSynthesis.speak(u);
+};
+var xpFor = function (lv) {
+  return lv * 50 + (lv - 1) * 20;
+};
+function SB(props) {
+  return /*#__PURE__*/React.createElement("button", {
+    onClick: function () {
+      speak(props.t);
+    },
+    style: {
+      background: "linear-gradient(135deg,#43e97b,#38f9d7)",
+      color: "#1a5c3a",
+      border: "none",
+      padding: props.sz === "lg" ? "10px 22px" : "6px 14px",
+      borderRadius: 12,
+      cursor: "pointer",
+      fontSize: props.sz === "lg" ? "1.1em" : "0.88em",
+      fontWeight: 600,
+      fontFamily: "'Noto Sans KR'"
+    }
+  }, "🔊 " + (props.lb || ""));
+}
+function WC(props) {
+  var cr = useRef(null),
+    dr = useRef(false);
+  var hds = useState(false),
+    hd = hds[0],
+    setHd = hds[1];
+  var gp = function (e) {
+    var c = cr.current,
+      r = c.getBoundingClientRect(),
+      sx = c.width / r.width,
+      sy = c.height / r.height;
+    if (e.touches) return {
+      x: (e.touches[0].clientX - r.left) * sx,
+      y: (e.touches[0].clientY - r.top) * sy
+    };
+    return {
+      x: (e.clientX - r.left) * sx,
+      y: (e.clientY - r.top) * sy
+    };
+  };
+  var sd = function (e) {
+    e.preventDefault();
+    var ctx = cr.current.getContext("2d"),
+      p = gp(e);
+    ctx.beginPath();
+    ctx.moveTo(p.x, p.y);
+    dr.current = true;
+  };
+  var mv = function (e) {
+    e.preventDefault();
+    if (!dr.current) return;
+    var ctx = cr.current.getContext("2d"),
+      p = gp(e);
+    ctx.lineWidth = 6;
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.strokeStyle = "#2563eb";
+    ctx.lineTo(p.x, p.y);
+    ctx.stroke();
+    setHd(true);
+  };
+  var ed = function () {
+    dr.current = false;
+  };
+  var dg = useCallback(function (ctx, l) {
+    ctx.clearRect(0, 0, 300, 300);
+    ctx.strokeStyle = "#e5e7eb";
+    ctx.lineWidth = 1;
+    ctx.setLineDash([5, 5]);
+    ctx.beginPath();
+    ctx.moveTo(150, 0);
+    ctx.lineTo(150, 300);
+    ctx.moveTo(0, 150);
+    ctx.lineTo(300, 150);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.font = "200px 'Fredoka',sans-serif";
+    ctx.fillStyle = "rgba(200,200,200,0.3)";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(l, 150, 155);
+  }, []);
+  var cl = function () {
+    dg(cr.current.getContext("2d"), props.letter);
+    setHd(false);
+  };
+  useEffect(function () {
+    dg(cr.current.getContext("2d"), props.letter);
+    setHd(false);
+  }, [props.letter, dg]);
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      gap: 12,
+      marginTop: 14
+    }
+  }, /*#__PURE__*/React.createElement("canvas", {
+    ref: cr,
+    width: 300,
+    height: 300,
+    onMouseDown: sd,
+    onMouseMove: mv,
+    onMouseUp: ed,
+    onMouseLeave: ed,
+    onTouchStart: sd,
+    onTouchMove: mv,
+    onTouchEnd: ed,
+    style: {
+      border: "3px dashed #cbd5e1",
+      borderRadius: 16,
+      cursor: "crosshair",
+      touchAction: "none",
+      background: "#fff",
+      width: "100%",
+      maxWidth: 270,
+      aspectRatio: "1"
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 10
+    }
+  }, /*#__PURE__*/React.createElement("button", {
+    onClick: cl,
+    style: {
+      background: "white",
+      color: "#667eea",
+      border: "2px solid #667eea",
+      padding: "8px 18px",
+      borderRadius: 14,
+      fontWeight: 600,
+      cursor: "pointer",
+      fontFamily: "'Noto Sans KR'",
+      fontSize: "0.95em"
+    }
+  }, "\uD83D\uDDD1\uFE0F \uC9C0\uC6B0\uAE30"), hd && /*#__PURE__*/React.createElement("button", {
+    onClick: props.onDone,
+    style: {
+      background: "linear-gradient(135deg,#667eea,#764ba2)",
+      color: "white",
+      border: "none",
+      padding: "9px 22px",
+      borderRadius: 14,
+      fontWeight: 600,
+      cursor: "pointer",
+      fontFamily: "'Noto Sans KR'",
+      fontSize: "0.95em"
+    }
+  }, "\u2705 \uC644\uB8CC!")));
+}
+function App() {
+  var savedSt = LS.load('student');
+  var vs = useState(savedSt ? "map" : "welcome"),
+    v = vs[0],
+    setV = vs[1];
+  var sts = useState(savedSt),
+    st = sts[0],
+    setSt = sts[1];
+  var nis = useState(""),
+    ni = nis[0],
+    setNi = nis[1];
+  var css2 = useState(null),
+    cs = css2[0],
+    setCs = css2[1];
+  var svs = useState(null),
+    sv = svs[0],
+    setSv2 = svs[1];
+  var msgs = useState(null),
+    msg = msgs[0],
+    setMsg = msgs[1];
+  var ais = useState(0),
+    ai = ais[0],
+    setAi = ais[1];
+  var wcs = useState("animals"),
+    wc = wcs[0],
+    setWc = wcs[1];
+  var wis = useState(0),
+    wi = wis[0],
+    setWi = wis[1];
+  var swas = useState(false),
+    swa = swas[0],
+    setSwa = swas[1];
+  var mgs = useState(null),
+    mg = mgs[0],
+    setMg = mgs[1];
+  var sis = useState(0),
+    si = sis[0],
+    setSi = sis[1];
+  var sps = useState([]),
+    sp = sps[0],
+    setSp = sps[1];
+  var sas = useState([]),
+    sa = sas[0],
+    setSa = sas[1];
+  var gis = useState(0),
+    gi = gis[0],
+    setGi = gis[1];
+  var gss = useState(null),
+    gs = gss[0],
+    setGs = gss[1];
+  var qqs = useState([]),
+    qq = qqs[0],
+    setQq = qqs[1];
+  var qis = useState(0),
+    qi = qis[0],
+    setQi = qis[1];
+  var qss = useState(0),
+    qs = qss[0],
+    setQs = qss[1];
+  var qas = useState(false),
+    qa = qas[0],
+    setQa = qas[1];
+  var srs = useState(null),
+    sr = srs[0],
+    setSr = srs[1];
+  var dts = useState("overview"),
+    dt = dts[0],
+    setDt = dts[1];
+  useEffect(function () {
+    if (st) LS.save('student', st);
+  }, [st]);
+  useEffect(function () {
+    if (!st) return;
+    var today = new Date().toDateString();
+    if (st.lastLogin && st.lastLogin !== today) {
+      var last = new Date(st.lastLogin);
+      var diff = Math.floor((new Date(today) - last) / (1000 * 60 * 60 * 24));
+      if (diff === 1) setSt(function (p) {
+        return Object.assign({}, p, {
+          sk: p.sk + 1,
+          lastLogin: today
+        });
+      });else if (diff > 1) setSt(function (p) {
+        return Object.assign({}, p, {
+          sk: 1,
+          lastLogin: today
+        });
+      });
+    } else if (!st.lastLogin) {
+      setSt(function (p) {
+        return Object.assign({}, p, {
+          lastLogin: today
+        });
+      });
+    }
+  }, []);
+  var sm = function (t, tp) {
+    setMsg({
+      t: t,
+      tp: tp || "success"
+    });
+    setTimeout(function () {
+      setMsg(null);
+    }, 2500);
+  };
+  var axp = function (amt) {
+    setSt(function (p) {
+      var nx = p.xp + amt;
+      var nl = p.lv;
+      while (nx >= xpFor(nl + 1)) nl++;
+      if (nl > p.lv) setTimeout(function () {
+        sm("🎉 레벨 UP! Lv." + nl, "levelup");
+      }, 300);
+      return Object.assign({}, p, {
+        xp: nx,
+        lv: nl
+      });
+    });
+  };
+  useEffect(function () {
+    if (!st) return;
+    BADGES.forEach(function (b) {
+      if (st.badges.indexOf(b.id) === -1 && b.cond(st)) {
+        setSt(function (p) {
+          return Object.assign({}, p, {
+            badges: p.badges.concat([b.id])
+          });
+        });
+        sm("🏅 배지: " + b.name + "!", "badge");
+      }
+    });
+  }, [st && st.xp, st && st.qc, st && st.wl]);
+  useEffect(function () {
+    if (window.speechSynthesis) window.speechSynthesis.getVoices();
+  }, []);
+  var go = function () {
+    if (!ni.trim()) return;
+    var ns = {
+      name: ni.trim(),
+      xp: 0,
+      lv: 1,
+      sk: 1,
+      qc: 0,
+      wl: 0,
+      ps: 0,
+      sv: 0,
+      sb: 0,
+      badges: [],
+      ap: {},
+      tc: 0,
+      ta: 0,
+      lastLogin: new Date().toDateString()
+    };
+    setSt(ns);
+    setV("map");
+    sm("환영합니다, " + ni.trim() + "! 🚀");
+  };
+  var logout = function () {
+    if (confirm("로그아웃하시겠습니까?\n(기존 데이터는 유지됩니다)")) {
+      LS.remove('student');
+      setSt(null);
+      setV("welcome");
+    }
+  };
+  var resetData = function () {
+    if (confirm("⚠️ 모든 학습 데이터가 삭제됩니다. 계속하시겠습니까?")) {
+      LS.remove('student');
+      setSt(null);
+      setV("welcome");
+    }
+  };
+  var enter = function (s) {
+    if (st.xp < s.unlockXP) {
+      sm("XP " + s.unlockXP + " 필요!", "error");
+      return;
+    }
+    setCs(s);
+    setSv2(null);
+    setV("stage");
+    setSt(function (p) {
+      return Object.assign({}, p, {
+        sv: Math.max(p.sv, s.id)
+      });
+    });
+  };
+  var smg = function () {
+    var w = WORDS[wc].slice(0, 6);
+    setMg({
+      w: w,
+      sk: w.slice().sort(function () {
+        return Math.random() - 0.5;
+      }),
+      sel: null,
+      m: [],
+      at: 0
+    });
+    setSv2("match");
+  };
+  var hm = function (tp, ix) {
+    if (!mg) return;
+    if (!mg.sel) {
+      setMg(function (p) {
+        return Object.assign({}, p, {
+          sel: {
+            tp: tp,
+            ix: ix
+          }
+        });
+      });
+      return;
+    }
+    var s = mg.sel;
+    if (s.tp === tp) {
+      setMg(function (p) {
+        return Object.assign({}, p, {
+          sel: {
+            tp: tp,
+            ix: ix
+          }
+        });
+      });
+      return;
+    }
+    var ew = tp === "en" ? mg.w[ix] : mg.w[s.ix];
+    var kw = tp === "ko" ? mg.sk[ix] : mg.sk[s.ix];
+    if (ew.en === kw.en) {
+      var nm = mg.m.concat([ew.en]);
+      setMg(function (p) {
+        return Object.assign({}, p, {
+          m: nm,
+          sel: null,
+          at: p.at + 1
+        });
+      });
+      speak(ew.en);
+      if (nm.length === mg.w.length) {
+        axp(30);
+        sm("🎉 매칭 완료! +30 XP");
+        setSt(function (p) {
+          return Object.assign({}, p, {
+            wl: p.wl + 6
+          });
+        });
+      }
+    } else {
+      setMg(function (p) {
+        return Object.assign({}, p, {
+          sel: null,
+          at: p.at + 1
+        });
+      });
+      sm("❌ 다시!", "error");
+    }
+  };
+  var ssent = function (ix) {
+    setSi(ix);
+    setSp(SENTS[ix].p.slice().sort(function () {
+      return Math.random() - 0.5;
+    }));
+    setSa([]);
+    setSv2("sentence");
+  };
+  var csent = function () {
+    if (JSON.stringify(sa) === JSON.stringify(SENTS[si].p)) {
+      axp(20);
+      speak(SENTS[si].p.join(" "));
+      sm("🎉 정답! +20 XP");
+      setSt(function (p) {
+        return Object.assign({}, p, {
+          sb: p.sb + 1,
+          tc: p.tc + 1,
+          ta: p.ta + 1
+        });
+      });
+    } else {
+      sm("❌ 순서를 확인해보세요!", "error");
+      setSt(function (p) {
+        return Object.assign({}, p, {
+          ta: p.ta + 1
+        });
+      });
+    }
+  };
+  var sqz = function () {
+    var qs2 = [];
+    var aw = Object.values(WORDS).reduce(function (a, b) {
+      return a.concat(b);
+    }, []);
+    var i;
+    for (i = 0; i < 4; i++) {
+      var w = aw[Math.floor(Math.random() * aw.length)];
+      var o = aw.filter(function (x) {
+        return x.en !== w.en;
+      }).sort(function () {
+        return Math.random() - 0.5;
+      }).slice(0, 3).map(function (x) {
+        return x.ko;
+      }).concat([w.ko]).sort(function () {
+        return Math.random() - 0.5;
+      });
+      qs2.push({
+        tp: "word",
+        q: '"' + w.en + '" 의 뜻은?',
+        o: o,
+        a: o.indexOf(w.ko),
+        sp: w.en
+      });
+    }
+    for (i = 0; i < 3; i++) {
+      var g = GRAM[Math.floor(Math.random() * GRAM.length)];
+      qs2.push({
+        tp: "grammar",
+        q: g.s,
+        o: g.o,
+        a: g.a,
+        r: g.r,
+        ko: g.ko
+      });
+    }
+    for (i = 0; i < 3; i++) {
+      var w2 = aw[Math.floor(Math.random() * aw.length)];
+      var o2 = aw.filter(function (x) {
+        return x.en !== w2.en;
+      }).sort(function () {
+        return Math.random() - 0.5;
+      }).slice(0, 3).map(function (x) {
+        return x.en;
+      }).concat([w2.en]).sort(function () {
+        return Math.random() - 0.5;
+      });
+      qs2.push({
+        tp: "listen",
+        q: "🔊 듣고 맞는 단어 고르기",
+        o: o2,
+        a: o2.indexOf(w2.en),
+        sp: w2.en
+      });
+    }
+    setQq(qs2.sort(function () {
+      return Math.random() - 0.5;
+    }));
+    setQi(0);
+    setQs(0);
+    setQa(false);
+    setSr(null);
+    setV("quiz");
+  };
+  var aqz = function (oi) {
+    if (qa) return;
+    setQa(true);
+    var q = qq[qi];
+    setSr(oi === q.a ? "ok" : "no");
+    if (oi === q.a) setQs(function (p) {
+      return p + 1;
+    });
+    if (q.sp) speak(q.sp);
+  };
+  var nqz = function () {
+    if (qi + 1 >= qq.length) {
+      axp(qs * 10);
+      setSt(function (p) {
+        return Object.assign({}, p, {
+          qc: p.qc + 1,
+          ps: p.ps + (qs === qq.length ? 1 : 0),
+          tc: p.tc + qs,
+          ta: p.ta + qq.length
+        });
+      });
+      setV("result");
+      return;
+    }
+    setQi(function (p) {
+      return p + 1;
+    });
+    setQa(false);
+    setSr(null);
+  };
+  var nlx = st ? xpFor(st.lv + 1) : 0;
+  var plx = st ? xpFor(st.lv) : 0;
+  var xpp = st ? Math.max(0, Math.min(100, (st.xp - plx) / (nlx - plx) * 100)) : 0;
+  var S = {
+    app: {
+      fontFamily: "'Noto Sans KR',sans-serif",
+      minHeight: "100vh",
+      background: "linear-gradient(135deg,#667eea 0%,#764ba2 100%)",
+      color: "#1e293b"
+    },
+    hdr: {
+      background: "rgba(255,255,255,0.15)",
+      backdropFilter: "blur(20px)",
+      WebkitBackdropFilter: "blur(20px)",
+      padding: "10px 16px",
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      borderBottom: "1px solid rgba(255,255,255,0.2)",
+      flexWrap: "wrap",
+      gap: 8,
+      position: "sticky",
+      top: 0,
+      zIndex: 100
+    },
+    cnt: {
+      maxWidth: 880,
+      margin: "0 auto",
+      padding: 16
+    },
+    card: {
+      background: "rgba(255,255,255,0.95)",
+      borderRadius: 20,
+      padding: 20,
+      marginBottom: 14,
+      boxShadow: "0 8px 32px rgba(0,0,0,0.1)"
+    },
+    bp: {
+      background: "linear-gradient(135deg,#667eea,#764ba2)",
+      color: "white",
+      border: "none",
+      padding: "10px 24px",
+      borderRadius: 14,
+      fontSize: "0.95em",
+      fontWeight: 600,
+      cursor: "pointer",
+      fontFamily: "'Noto Sans KR'",
+      boxShadow: "0 4px 12px rgba(102,126,234,0.4)"
+    },
+    bs: {
+      background: "white",
+      color: "#667eea",
+      border: "2px solid #667eea",
+      padding: "8px 18px",
+      borderRadius: 14,
+      fontSize: "0.9em",
+      fontWeight: 600,
+      cursor: "pointer",
+      fontFamily: "'Noto Sans KR'"
+    },
+    nb: {
+      background: "rgba(255,255,255,0.2)",
+      border: "1px solid rgba(255,255,255,0.3)",
+      color: "white",
+      padding: "6px 12px",
+      borderRadius: 10,
+      cursor: "pointer",
+      fontSize: "0.82em",
+      fontFamily: "'Noto Sans KR'"
+    },
+    sb: {
+      background: "rgba(255,255,255,0.25)",
+      padding: "3px 10px",
+      borderRadius: 20,
+      fontSize: "0.82em",
+      color: "white",
+      fontWeight: 500
+    },
+    sec: {
+      fontFamily: "'Fredoka'",
+      fontSize: "1.2em",
+      fontWeight: 600,
+      marginBottom: 10,
+      color: "#334155"
+    },
+    qopt: {
+      padding: 14,
+      borderRadius: 14,
+      border: "2px solid #e2e8f0",
+      background: "white",
+      cursor: "pointer",
+      fontSize: "1em",
+      fontWeight: 500,
+      fontFamily: "'Noto Sans KR'",
+      textAlign: "center"
+    },
+    chip: {
+      padding: "8px 16px",
+      borderRadius: 12,
+      fontWeight: 600,
+      cursor: "pointer",
+      fontFamily: "'Fredoka'",
+      fontSize: "1.1em"
+    }
+  };
+  var Toast = function () {
+    return msg ? /*#__PURE__*/React.createElement("div", {
+      style: {
+        position: "fixed",
+        top: 16,
+        left: "50%",
+        transform: "translateX(-50%)",
+        padding: "12px 24px",
+        borderRadius: 16,
+        fontWeight: 600,
+        zIndex: 1000,
+        maxWidth: "90%",
+        textAlign: "center",
+        fontFamily: "'Noto Sans KR'",
+        fontSize: "0.95em",
+        animation: "slideIn 0.3s ease",
+        background: msg.tp === "success" ? "#dcfce7" : msg.tp === "error" ? "#fee2e2" : msg.tp === "levelup" ? "#fef3c7" : "#ede9fe",
+        color: msg.tp === "success" ? "#166534" : msg.tp === "error" ? "#991b1b" : msg.tp === "levelup" ? "#92400e" : "#5b21b6",
+        border: "2px solid " + (msg.tp === "success" ? "#86efac" : msg.tp === "error" ? "#fca5a5" : msg.tp === "levelup" ? "#fcd34d" : "#c4b5fd")
+      }
+    }, msg.t) : null;
+  };
+  var Hdr = function () {
+    return /*#__PURE__*/React.createElement("div", {
+      style: S.hdr
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        alignItems: "center",
+        gap: 10,
+        flexWrap: "wrap"
+      }
+    }, /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontFamily: "'Fredoka'",
+        fontSize: "1.15em",
+        fontWeight: 700,
+        color: "white",
+        textShadow: "2px 2px 4px rgba(0,0,0,0.2)"
+      }
+    }, "\uD83C\uDFF0 English Quest"), /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        gap: 6,
+        flexWrap: "wrap"
+      }
+    }, /*#__PURE__*/React.createElement("span", {
+      style: S.sb
+    }, "⭐Lv." + st.lv), /*#__PURE__*/React.createElement("span", {
+      style: S.sb
+    }, "✨" + st.xp + "XP"), /*#__PURE__*/React.createElement("span", {
+      style: S.sb
+    }, "🔥" + st.sk + "일"))), /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        gap: 4,
+        flexWrap: "wrap"
+      }
+    }, /*#__PURE__*/React.createElement("button", {
+      style: Object.assign({}, S.nb, v === "map" ? {
+        background: "rgba(255,255,255,0.4)",
+        fontWeight: 700
+      } : {}),
+      onClick: function () {
+        setV("map");
+        setSv2(null);
+      }
+    }, "\uD83D\uDDFA\uFE0F\uB9F5"), /*#__PURE__*/React.createElement("button", {
+      style: S.nb,
+      onClick: sqz
+    }, "\uD83D\uDCDD\uD034\uC988"), /*#__PURE__*/React.createElement("button", {
+      style: Object.assign({}, S.nb, v === "profile" ? {
+        background: "rgba(255,255,255,0.4)",
+        fontWeight: 700
+      } : {}),
+      onClick: function () {
+        setV("profile");
+      }
+    }, "\uD83C\uDF96\uFE0F\uD504\uB85C\uD544"), /*#__PURE__*/React.createElement("button", {
+      style: Object.assign({}, S.nb, v === "lb" ? {
+        background: "rgba(255,255,255,0.4)",
+        fontWeight: 700
+      } : {}),
+      onClick: function () {
+        setV("lb");
+      }
+    }, "\uD83C\uDFC6\uC21C\uC704"), /*#__PURE__*/React.createElement("button", {
+      style: S.nb,
+      onClick: logout
+    }, "\uD83D\uDEAA")));
+  };
 
   // WELCOME
-  if(v==="welcome")return<div><Toast/>
-    <div className="welc">
-      <div className="welc-icon">🏰</div>
-      <h1>English Quest</h1>
-      <p>모험으로 배우는 영어! 🌟<br/>알파벳부터 문장까지!</p>
-      <input placeholder="이름을 입력하세요" value={ni} onChange={e=>setNi(e.target.value)} onKeyDown={e=>e.key==="Enter"&&go()}/>
-      <button className="bp" onClick={go} style={{fontSize:"1.05em",padding:"11px 32px"}}>🚀 모험 시작!</button>
-      <div style={{marginTop:16}}><button className="bg" onClick={()=>setV("dash")}>📊 교사 대시보드</button></div>
-    </div>
-  </div>;
+  if (v === "welcome") return /*#__PURE__*/React.createElement("div", {
+    style: S.app
+  }, /*#__PURE__*/React.createElement(Toast, null), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+      minHeight: "100vh",
+      padding: 20,
+      textAlign: "center"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: "4em",
+      marginBottom: 8,
+      animation: "bounce 2s infinite"
+    }
+  }, "\uD83C\uDFF0"), /*#__PURE__*/React.createElement("h1", {
+    style: {
+      fontFamily: "'Fredoka'",
+      fontSize: "2.2em",
+      color: "white",
+      textShadow: "3px 3px 6px rgba(0,0,0,0.2)",
+      marginBottom: 6
+    }
+  }, "English Quest"), /*#__PURE__*/React.createElement("p", {
+    style: {
+      color: "rgba(255,255,255,0.9)",
+      fontSize: "1em",
+      marginBottom: 24,
+      lineHeight: 1.6
+    }
+  }, "\uBAA8\uD5D8\uC73C\uB85C \uBC30\uC6B0\uB294 \uC601\uC5B4! \uD83C\uDF1F", /*#__PURE__*/React.createElement("br", null), "\uC54C\uD30C\uBCB3\uBD80\uD130 \uBB38\uC7A5\uAE4C\uC9C0!"), /*#__PURE__*/React.createElement("input", {
+    placeholder: "\uC774\uB984\uC744 \uC785\uB825\uD558\uC138\uC694",
+    value: ni,
+    onChange: function (e) {
+      setNi(e.target.value);
+    },
+    onKeyDown: function (e) {
+      if (e.key === "Enter") go();
+    },
+    style: {
+      padding: "14px 24px",
+      borderRadius: 16,
+      border: "3px solid rgba(255,255,255,0.5)",
+      background: "rgba(255,255,255,0.9)",
+      fontSize: "1.05em",
+      width: 260,
+      textAlign: "center",
+      fontFamily: "'Noto Sans KR'",
+      outline: "none",
+      marginBottom: 14
+    }
+  }), /*#__PURE__*/React.createElement("button", {
+    onClick: go,
+    style: Object.assign({}, S.bp, {
+      fontSize: "1.1em",
+      padding: "12px 36px",
+      marginBottom: 8
+    })
+  }, "\uD83D\uDE80 \uBAA8\uD5D8 \uC2DC\uC791!"), /*#__PURE__*/React.createElement("p", {
+    style: {
+      color: "rgba(255,255,255,0.6)",
+      fontSize: "0.82em",
+      marginBottom: 20
+    }
+  }, "\uD559\uC2B5 \uAE30\uB85D\uC740 \uC774 \uAE30\uAE30\uC5D0 \uC790\uB3D9 \uC800\uC7A5\uB429\uB2C8\uB2E4"), /*#__PURE__*/React.createElement("button", {
+    onClick: function () {
+      setV("dash");
+    },
+    style: {
+      padding: "10px 24px",
+      borderRadius: 16,
+      border: "2px solid rgba(255,255,255,0.5)",
+      background: "rgba(255,255,255,0.15)",
+      color: "white",
+      fontSize: "0.95em",
+      fontWeight: 600,
+      cursor: "pointer",
+      fontFamily: "'Noto Sans KR'"
+    }
+  }, "\uD83D\uDCCA \uAD50\uC0AC \uB300\uC2DC\uBCF4\uB4DC"), /*#__PURE__*/React.createElement("p", {
+    style: {
+      color: "rgba(255,255,255,0.5)",
+      fontSize: "0.72em",
+      marginTop: 30
+    }
+  }, "\uC624\uC131\uC911\uD559\uAD50 English Quest v1.0")));
 
   // DASHBOARD
-  if(v==="dash"){const tot=SAMPLE.length;const ax=Math.round(SAMPLE.reduce((a,s)=>a+s.xp,0)/tot);const aa=Math.round(SAMPLE.reduce((a,s)=>a+(s.ta?s.tc/s.ta*100:0),0)/tot);const ac=SAMPLE.filter(s=>s.ll==="03-25").length;
-  return<div><Toast/>
-    <div className="hdr"><span className="logo">📊 교사 대시보드</span>
-      <div style={{display:"flex",gap:4,flexWrap:"wrap"}}>
-        {["overview","students","analytics"].map(t=><button key={t} className={`dtab ${dt===t?"on":""}`} onClick={()=>setDt(t)}>{t==="overview"?"📋현황":t==="students"?"👥학생":"📈분석"}</button>)}
-        <button className="dtab" onClick={()=>setV("welcome")}>🏠홈</button>
-      </div>
-    </div>
-    <div className="cnt">
-      {dt==="overview"&&<>
-        <div className="stgrid">
-          {[[tot,"전체 학생"],[ac,"오늘 활동"],[ax,"평균 XP"],[aa+"%","평균 정답률"]].map(([v2,l],i)=><div key={i} className="stcard"><div className="stval">{v2}</div><div className="stlbl">{l}</div></div>)}
-        </div>
-        <div className="card"><div className="sec">📊 학생별 XP</div>
-          <div className="barc">{SAMPLE.map((s,i)=><div key={i} className="bari"><div style={{fontSize:"0.72em",fontWeight:600}}>{s.xp}</div><div className="bar" style={{height:`${(s.xp/1000)*125}px`,background:"linear-gradient(180deg,#667eea,#764ba2)"}}/><div className="barl">{s.name.slice(0,3)}</div></div>)}</div>
-        </div>
-        <div className="card"><div className="sec">🏆 우수 학생</div>
-          {[...SAMPLE].sort((a,b)=>b.xp-a.xp).slice(0,3).map((s,i)=><div key={i} className={`lb ${["t1","t2","t3"][i]}`}>
-            <div style={{fontFamily:"var(--fd)",fontSize:"1.3em",fontWeight:700,width:34,textAlign:"center"}}>{["🥇","🥈","🥉"][i]}</div>
-            <div style={{flex:1}}><div style={{fontWeight:600}}>{s.name}</div><div style={{fontSize:"0.76em",color:"#64748b"}}>Lv.{s.lv}•🔥{s.sk}일•📚{s.wl}단어</div></div>
-            <div style={{fontFamily:"var(--fd)",fontSize:"1.1em",fontWeight:600,color:"var(--pri)"}}>{s.xp}XP</div>
-          </div>)}
-        </div>
-      </>}
-      {dt==="students"&&<div className="card" style={{overflow:"auto"}}>
-        <div className="sec">👥 학생별 현황</div>
-        <table className="stbl"><thead><tr>{["이름","레벨","XP","연속","퀴즈","단어","정답률","접속"].map((h,i)=><th key={i}>{h}</th>)}</tr></thead><tbody>
-          {SAMPLE.map((s,i)=><tr key={i}><td style={{fontWeight:600}}>{s.name}</td><td>Lv.{s.lv}</td><td>{s.xp}</td><td>🔥{s.sk}일</td><td>{s.qc}회</td><td>{s.wl}개</td><td style={{color:(s.tc/s.ta*100)>=80?"#16a34a":"#f59e0b",fontWeight:600}}>{Math.round(s.tc/s.ta*100)}%</td><td>{s.ll}</td></tr>)}
-        </tbody></table>
-      </div>}
-      {dt==="analytics"&&<>
-        <div className="stgrid">
-          {[[Math.round(SAMPLE.reduce((a,s)=>a+s.qc,0)/tot),"평균퀴즈"],[Math.round(SAMPLE.reduce((a,s)=>a+s.wl,0)/tot),"평균단어"],[Math.round(SAMPLE.reduce((a,s)=>a+s.sk,0)/tot),"평균연속"],[Math.round(ac/tot*100)+"%","참여율"]].map(([v2,l],i)=><div key={i} className="stcard"><div className="stval">{v2}</div><div className="stlbl">{l}</div></div>)}
-        </div>
-        <div className="card"><div className="sec">⚠️ 관심 필요</div>
-          {SAMPLE.filter(s=>s.sk<=2||(s.ta&&s.tc/s.ta<0.6)).map((s,i)=><div key={i} style={{padding:"7px 0",borderBottom:"1px solid #e2e8f0",display:"flex",justifyContent:"space-between"}}>
-            <span style={{fontWeight:600}}>{s.name}</span>
-            <span style={{fontSize:"0.82em"}}>{s.sk<=2&&<span style={{color:"#ef4444",marginRight:5}}>⚠️{s.sk}일</span>}{s.ta&&s.tc/s.ta<0.6&&<span style={{color:"#f59e0b"}}>📉{Math.round(s.tc/s.ta*100)}%</span>}</span>
-          </div>)}
-        </div>
-      </>}
-    </div>
-  </div>;}
+  if (v === "dash") {
+    var tot = SAMPLE.length;
+    var ax = Math.round(SAMPLE.reduce(function (a, s) {
+      return a + s.xp;
+    }, 0) / tot);
+    var aa = Math.round(SAMPLE.reduce(function (a, s) {
+      return a + (s.ta ? s.tc / s.ta * 100 : 0);
+    }, 0) / tot);
+    var ac = SAMPLE.filter(function (s) {
+      return s.ll === "03-25";
+    }).length;
+    return /*#__PURE__*/React.createElement("div", {
+      style: S.app
+    }, /*#__PURE__*/React.createElement(Toast, null), /*#__PURE__*/React.createElement("div", {
+      style: S.hdr
+    }, /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontFamily: "'Fredoka'",
+        fontSize: "1.15em",
+        fontWeight: 700,
+        color: "white"
+      }
+    }, "\uD83D\uDCCA \uAD50\uC0AC \uB300\uC2DC\uBCF4\uB4DC"), /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        gap: 4,
+        flexWrap: "wrap"
+      }
+    }, ["overview", "students", "analytics"].map(function (t) {
+      return /*#__PURE__*/React.createElement("button", {
+        key: t,
+        style: {
+          padding: "6px 14px",
+          borderRadius: 12,
+          border: "none",
+          background: dt === t ? "rgba(255,255,255,0.45)" : "rgba(255,255,255,0.2)",
+          color: "white",
+          cursor: "pointer",
+          fontFamily: "'Noto Sans KR'",
+          fontWeight: dt === t ? 700 : 500,
+          fontSize: "0.82em"
+        },
+        onClick: function () {
+          setDt(t);
+        }
+      }, t === "overview" ? "📋현황" : t === "students" ? "👥학생" : "📈분석");
+    }), /*#__PURE__*/React.createElement("button", {
+      style: {
+        padding: "6px 14px",
+        borderRadius: 12,
+        border: "none",
+        background: "rgba(255,255,255,0.2)",
+        color: "white",
+        cursor: "pointer",
+        fontFamily: "'Noto Sans KR'",
+        fontSize: "0.82em"
+      },
+      onClick: function () {
+        setV("welcome");
+      }
+    }, "\uD83C\uDFE0\uD648"))), /*#__PURE__*/React.createElement("div", {
+      style: S.cnt
+    }, dt === "overview" && /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit,minmax(130px,1fr))",
+        gap: 10,
+        marginBottom: 14
+      }
+    }, [[tot, "전체 학생"], [ac, "오늘 활동"], [ax, "평균 XP"], [aa + "%", "평균 정답률"]].map(function (item, i) {
+      return /*#__PURE__*/React.createElement("div", {
+        key: i,
+        style: Object.assign({}, S.card, {
+          textAlign: "center",
+          padding: 14
+        })
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          fontFamily: "'Fredoka'",
+          fontSize: "1.8em",
+          fontWeight: 700,
+          color: "#667eea"
+        }
+      }, item[0]), /*#__PURE__*/React.createElement("div", {
+        style: {
+          fontSize: "0.82em",
+          color: "#64748b",
+          marginTop: 3
+        }
+      }, item[1]));
+    })), /*#__PURE__*/React.createElement("div", {
+      style: S.card
+    }, /*#__PURE__*/React.createElement("div", {
+      style: S.sec
+    }, "\uD83D\uDCCA \uD559\uC0DD\uBCC4 XP"), /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        alignItems: "flex-end",
+        gap: 7,
+        height: 150
+      }
+    }, SAMPLE.map(function (s, i) {
+      return /*#__PURE__*/React.createElement("div", {
+        key: i,
+        style: {
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: 3
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          fontSize: "0.72em",
+          fontWeight: 600
+        }
+      }, s.xp), /*#__PURE__*/React.createElement("div", {
+        style: {
+          width: "100%",
+          maxWidth: 38,
+          borderRadius: "8px 8px 0 0",
+          background: "linear-gradient(180deg,#667eea,#764ba2)",
+          height: s.xp / 1000 * 130 + "px"
+        }
+      }), /*#__PURE__*/React.createElement("div", {
+        style: {
+          fontSize: "0.68em",
+          color: "#64748b"
+        }
+      }, s.name.substring(0, 3)));
+    }))), /*#__PURE__*/React.createElement("div", {
+      style: S.card
+    }, /*#__PURE__*/React.createElement("div", {
+      style: S.sec
+    }, "\uD83C\uDFC6 \uC6B0\uC218 \uD559\uC0DD"), SAMPLE.slice().sort(function (a, b) {
+      return b.xp - a.xp;
+    }).slice(0, 3).map(function (s, i) {
+      return /*#__PURE__*/React.createElement("div", {
+        key: i,
+        style: {
+          display: "flex",
+          alignItems: "center",
+          gap: 10,
+          padding: "10px 14px",
+          borderRadius: 12,
+          marginBottom: 7,
+          background: i === 0 ? "#fffbeb" : "white",
+          border: "2px solid " + (i === 0 ? "#fbbf24" : i === 1 ? "#9ca3af" : "#d97706")
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          fontFamily: "'Fredoka'",
+          fontSize: "1.3em",
+          fontWeight: 700,
+          width: 34,
+          textAlign: "center"
+        }
+      }, ["🥇", "🥈", "🥉"][i]), /*#__PURE__*/React.createElement("div", {
+        style: {
+          flex: 1
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          fontWeight: 600
+        }
+      }, s.name), /*#__PURE__*/React.createElement("div", {
+        style: {
+          fontSize: "0.76em",
+          color: "#64748b"
+        }
+      }, "Lv." + s.lv + " • 🔥" + s.sk + "일 • 📚" + s.wl + "단어")), /*#__PURE__*/React.createElement("div", {
+        style: {
+          fontFamily: "'Fredoka'",
+          fontSize: "1.1em",
+          fontWeight: 600,
+          color: "#667eea"
+        }
+      }, s.xp + " XP"));
+    }))), dt === "students" && /*#__PURE__*/React.createElement("div", {
+      style: Object.assign({}, S.card, {
+        overflowX: "auto"
+      })
+    }, /*#__PURE__*/React.createElement("div", {
+      style: S.sec
+    }, "\uD83D\uDC65 \uD559\uC0DD\uBCC4 \uD604\uD669"), /*#__PURE__*/React.createElement("table", {
+      style: {
+        width: "100%",
+        borderCollapse: "collapse",
+        minWidth: 600
+      }
+    }, /*#__PURE__*/React.createElement("thead", null, /*#__PURE__*/React.createElement("tr", null, ["이름", "레벨", "XP", "연속", "퀴즈", "단어", "정답률", "접속"].map(function (h, i) {
+      return /*#__PURE__*/React.createElement("th", {
+        key: i,
+        style: {
+          background: "#667eea",
+          color: "white",
+          padding: "10px 12px",
+          textAlign: "left",
+          fontSize: "0.85em"
+        }
+      }, h);
+    }))), /*#__PURE__*/React.createElement("tbody", null, SAMPLE.map(function (s, i) {
+      return /*#__PURE__*/React.createElement("tr", {
+        key: i,
+        style: {
+          borderBottom: "1px solid #e2e8f0"
+        }
+      }, /*#__PURE__*/React.createElement("td", {
+        style: {
+          padding: "10px 12px",
+          fontWeight: 600
+        }
+      }, s.name), /*#__PURE__*/React.createElement("td", {
+        style: {
+          padding: "10px 12px"
+        }
+      }, "Lv." + s.lv), /*#__PURE__*/React.createElement("td", {
+        style: {
+          padding: "10px 12px"
+        }
+      }, s.xp), /*#__PURE__*/React.createElement("td", {
+        style: {
+          padding: "10px 12px"
+        }
+      }, "🔥" + s.sk + "일"), /*#__PURE__*/React.createElement("td", {
+        style: {
+          padding: "10px 12px"
+        }
+      }, s.qc + "회"), /*#__PURE__*/React.createElement("td", {
+        style: {
+          padding: "10px 12px"
+        }
+      }, s.wl + "개"), /*#__PURE__*/React.createElement("td", {
+        style: {
+          padding: "10px 12px",
+          color: Math.round(s.tc / s.ta * 100) >= 80 ? "#16a34a" : "#f59e0b",
+          fontWeight: 600
+        }
+      }, Math.round(s.tc / s.ta * 100) + "%"), /*#__PURE__*/React.createElement("td", {
+        style: {
+          padding: "10px 12px"
+        }
+      }, s.ll));
+    })))), dt === "analytics" && /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit,minmax(130px,1fr))",
+        gap: 10,
+        marginBottom: 14
+      }
+    }, [[Math.round(SAMPLE.reduce(function (a, s) {
+      return a + s.qc;
+    }, 0) / tot), "평균 퀴즈"], [Math.round(SAMPLE.reduce(function (a, s) {
+      return a + s.wl;
+    }, 0) / tot), "평균 단어"], [Math.round(SAMPLE.reduce(function (a, s) {
+      return a + s.sk;
+    }, 0) / tot), "평균 연속일"], [Math.round(ac / tot * 100) + "%", "참여율"]].map(function (item, i) {
+      return /*#__PURE__*/React.createElement("div", {
+        key: i,
+        style: Object.assign({}, S.card, {
+          textAlign: "center",
+          padding: 14
+        })
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          fontFamily: "'Fredoka'",
+          fontSize: "1.8em",
+          fontWeight: 700,
+          color: "#667eea"
+        }
+      }, item[0]), /*#__PURE__*/React.createElement("div", {
+        style: {
+          fontSize: "0.82em",
+          color: "#64748b",
+          marginTop: 3
+        }
+      }, item[1]));
+    })), /*#__PURE__*/React.createElement("div", {
+      style: S.card
+    }, /*#__PURE__*/React.createElement("div", {
+      style: S.sec
+    }, "\u26A0\uFE0F \uAD00\uC2EC \uD544\uC694 \uD559\uC0DD"), SAMPLE.filter(function (s) {
+      return s.sk <= 2 || s.ta && s.tc / s.ta < 0.6;
+    }).map(function (s, i) {
+      return /*#__PURE__*/React.createElement("div", {
+        key: i,
+        style: {
+          padding: "8px 0",
+          borderBottom: "1px solid #e2e8f0",
+          display: "flex",
+          justifyContent: "space-between"
+        }
+      }, /*#__PURE__*/React.createElement("span", {
+        style: {
+          fontWeight: 600
+        }
+      }, s.name), /*#__PURE__*/React.createElement("span", {
+        style: {
+          fontSize: "0.82em"
+        }
+      }, s.sk <= 2 ? /*#__PURE__*/React.createElement("span", {
+        style: {
+          color: "#ef4444",
+          marginRight: 6
+        }
+      }, "⚠️" + s.sk + "일") : null, s.ta && s.tc / s.ta < 0.6 ? /*#__PURE__*/React.createElement("span", {
+        style: {
+          color: "#f59e0b"
+        }
+      }, "📉" + Math.round(s.tc / s.ta * 100) + "%") : null));
+    })))));
+  }
 
   // MAP
-  if(v==="map")return<div><Toast/><Hdr/>
-    <div className="cnt">
-      <div style={{marginBottom:12}}><div className="xpbg"><div className="xpfl" style={{width:`${xpp}%`}}/></div><div style={{fontSize:"0.76em",color:"rgba(255,255,255,0.8)",textAlign:"right",marginTop:2}}>다음 레벨: {Math.max(0,nlx-st.xp)}XP</div></div>
-      <div style={{textAlign:"center",color:"white",fontFamily:"var(--fd)",fontSize:"1.6em",marginBottom:14,textShadow:"2px 2px 4px rgba(0,0,0,0.2)"}}>🗺️ 모험의 땅</div>
-      <div className="sgrid">{STAGES.map(s=>{const lk=st.xp<s.uxp;return<div key={s.id} className={`scard ${lk?"lk":""}`} onClick={()=>enter(s)} style={{borderColor:lk?"#e2e8f0":s.color}}>
-        {lk&&<div style={{position:"absolute",top:7,right:7,fontSize:"1.3em"}}>🔒</div>}
-        <div className="ico">{s.icon}</div><h3>{s.name}</h3><p>{s.desc}</p>
-        {lk&&<p style={{fontSize:"0.75em",color:"#ef4444",marginTop:2}}>🔒 {s.uxp}XP</p>}
-      </div>;})}</div>
-      <div className="card" style={{marginTop:12,textAlign:"center"}}><div style={{fontSize:"1.3em",marginBottom:5}}>🎯 오늘의 도전</div><p style={{color:"#64748b",marginBottom:8,fontSize:"0.88em"}}>종합 퀴즈로 XP 획득!</p><button className="bg" onClick={sqz}>📝 종합 퀴즈!</button></div>
-    </div>
-  </div>;
+  if (v === "map") return /*#__PURE__*/React.createElement("div", {
+    style: S.app
+  }, /*#__PURE__*/React.createElement(Toast, null), /*#__PURE__*/React.createElement(Hdr, null), /*#__PURE__*/React.createElement("div", {
+    style: S.cnt
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginBottom: 14
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: "#e2e8f0",
+      borderRadius: 10,
+      height: 10,
+      overflow: "hidden"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      height: "100%",
+      borderRadius: 10,
+      background: "linear-gradient(90deg,#667eea,#f093fb)",
+      width: xpp + "%",
+      transition: "width 0.5s"
+    }
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: "0.78em",
+      color: "rgba(255,255,255,0.8)",
+      textAlign: "right",
+      marginTop: 3
+    }
+  }, "다음 레벨: " + Math.max(0, nlx - st.xp) + " XP")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      textAlign: "center",
+      color: "white",
+      fontFamily: "'Fredoka'",
+      fontSize: "1.6em",
+      marginBottom: 16,
+      textShadow: "2px 2px 4px rgba(0,0,0,0.2)"
+    }
+  }, "\uD83D\uDDFA\uFE0F \uBAA8\uD5D8\uC758 \uB545"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "grid",
+      gridTemplateColumns: "repeat(auto-fit,minmax(180px,1fr))",
+      gap: 14
+    }
+  }, STAGES.map(function (s) {
+    var lk = st.xp < s.unlockXP;
+    return /*#__PURE__*/React.createElement("div", {
+      key: s.id,
+      onClick: function () {
+        enter(s);
+      },
+      style: {
+        background: "white",
+        borderRadius: 20,
+        padding: 22,
+        textAlign: "center",
+        cursor: lk ? "not-allowed" : "pointer",
+        border: "3px solid " + (lk ? "#e2e8f0" : s.color),
+        opacity: lk ? 0.5 : 1,
+        position: "relative"
+      }
+    }, lk && /*#__PURE__*/React.createElement("div", {
+      style: {
+        position: "absolute",
+        top: 8,
+        right: 8,
+        fontSize: "1.4em"
+      }
+    }, "\uD83D\uDD12"), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: "2.8em",
+        marginBottom: 6
+      }
+    }, s.icon), /*#__PURE__*/React.createElement("h3", {
+      style: {
+        fontFamily: "'Fredoka'",
+        fontSize: "1.1em",
+        marginBottom: 3
+      }
+    }, s.name), /*#__PURE__*/React.createElement("p", {
+      style: {
+        fontSize: "0.82em",
+        color: "#64748b"
+      }
+    }, s.desc), lk && /*#__PURE__*/React.createElement("p", {
+      style: {
+        fontSize: "0.78em",
+        color: "#ef4444",
+        marginTop: 3
+      }
+    }, "🔒 " + s.unlockXP + " XP 필요"));
+  })), /*#__PURE__*/React.createElement("div", {
+    style: Object.assign({}, S.card, {
+      marginTop: 14,
+      textAlign: "center"
+    })
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: "1.3em",
+      marginBottom: 6
+    }
+  }, "\uD83C\uDFAF \uC624\uB298\uC758 \uB3C4\uC804"), /*#__PURE__*/React.createElement("p", {
+    style: {
+      color: "#64748b",
+      marginBottom: 10,
+      fontSize: "0.9em"
+    }
+  }, "\uC885\uD569 \uD034\uC988\uB85C XP\uB97C \uD68D\uB4DD\uD558\uC138\uC694!"), /*#__PURE__*/React.createElement("button", {
+    onClick: sqz,
+    style: {
+      background: "linear-gradient(135deg,#f093fb,#f5576c)",
+      color: "white",
+      border: "none",
+      padding: "10px 22px",
+      borderRadius: 14,
+      fontSize: "0.95em",
+      fontWeight: 600,
+      cursor: "pointer",
+      fontFamily: "'Noto Sans KR'"
+    }
+  }, "\uD83D\uDCDD \uC885\uD569 \uD034\uC988!"))));
 
   // STAGE
-  if(v==="stage"&&cs){const RS=()=>{
-    // ALPHABET
-    if(cs.id===1){const a=AL[ai];
-      if(sv==="write")return<div className="card"><div className="sec">✍️ 따라쓰기: {a.u}</div>
-        <div style={{textAlign:"center",marginBottom:8}}><span style={{fontFamily:"var(--fd)",fontSize:"3em",color:"var(--pri)"}}>{a.u}</span><span style={{fontFamily:"var(--fd)",fontSize:"2em",color:"var(--pri2)",marginLeft:10}}>{a.lo}</span></div>
-        <p style={{textAlign:"center",color:"#64748b",fontSize:"0.82em"}}>가이드 위에 따라 써보세요!</p>
-        <WC letter={a.u} onDone={()=>{axp(5);sm(`✅ ${a.u} 완료! +5XP`);setSt(p=>({...p,ap:{...p.ap,[a.u]:true}}));if(ai<25)setAi(p=>p+1);}}/>
-        <div style={{textAlign:"center",marginTop:8}}><SB t={a.u} sz="lg" lb="발음 듣기"/></div>
-      </div>;
-      return<><div className="card"><div style={{textAlign:"center",padding:14}}>
-        <div><span style={{fontFamily:"var(--fd)",fontSize:"4.5em",fontWeight:700,color:"var(--pri)",lineHeight:1}}>{a.u}</span><span style={{fontFamily:"var(--fd)",fontSize:"3em",color:"var(--pri2)",marginLeft:10}}>{a.lo}</span></div>
-        <div style={{fontSize:"1.2em",margin:"8px 0",fontWeight:600}}><span style={{fontSize:"1.2em",marginRight:5}}>{a.e}</span>{a.w}</div>
-        <div style={{display:"flex",gap:6,justifyContent:"center",flexWrap:"wrap"}}><SB t={a.u} lb={`"${a.u}"`}/><SB t={a.lo} lb={`"${a.lo}"`}/><SB t={a.w} lb={`"${a.w}"`}/></div>
-        <div style={{display:"flex",gap:8,justifyContent:"center",marginTop:12,flexWrap:"wrap"}}><button className="bs" onClick={()=>setAi(Math.max(0,ai-1))}>◀이전</button><button className="bp" onClick={()=>setSv("write")}>✍️따라쓰기</button><button className="bs" onClick={()=>setAi(Math.min(25,ai+1))}>다음▶</button></div>
-      </div></div>
-      <div className="card"><div className="sec">알파벳 목록</div>
-        <div className="agrid">{AL.map((x,i)=><div key={i} className={`acell ${i===ai?"cur":""} ${st.ap[x.u]?"ok":""}`} onClick={()=>{setAi(i);spk(x.u);}}>{x.u}</div>)}</div>
-      </div></>;
-    }
-    // WORDS
-    if(cs.id===2){const cn={animals:"🐾동물",food:"🍽️음식",colors:"🎨색깔",body:"🧍신체",numbers:"🔢숫자"};
-      if(sv==="match")return<div className="card"><div className="sec">🎮 매칭 ({cn[wc]})</div>
-        {mg&&<><div className="mgrid">
-          <div className="mcol"><h4>🇺🇸 English</h4>{mg.w.map((w,i)=><div key={i} className={`mitm ${mg.m.includes(w.en)?"dn":""} ${mg.sel?.tp==="en"&&mg.sel.ix===i?"sel":""}`} onClick={()=>!mg.m.includes(w.en)&&hm("en",i)}>{w.e} {w.en}</div>)}</div>
-          <div className="mcol"><h4>🇰🇷 한국어</h4>{mg.sk.map((w,i)=><div key={i} className={`mitm ${mg.m.includes(w.en)?"dn":""} ${mg.sel?.tp==="ko"&&mg.sel.ix===i?"sel":""}`} onClick={()=>!mg.m.includes(w.en)&&hm("ko",i)}>{w.ko}</div>)}</div>
-        </div>
-        <div style={{textAlign:"center",marginTop:8,color:"#64748b",fontSize:"0.8em"}}>매칭:{mg.m.length}/{mg.w.length}•시도:{mg.at}</div>
-        {mg.m.length===mg.w.length&&<div style={{textAlign:"center",marginTop:12}}><button className="bp" onClick={()=>setSv(null)}>🎉 돌아가기</button></div>}</>}
-      </div>;
-      const ws=WD[wc];const w=ws[wi%ws.length];
-      return<><div className="card"><div className="sec">📚 단어 학습</div>
-        <div className="cats">{Object.entries(cn).map(([k,n])=><button key={k} className={`cat ${wc===k?"on":""}`} onClick={()=>{setWc(k);setWi(0);setSwa(false);}}>{n}</button>)}</div>
-        <div className="flash" onClick={()=>{setSwa(!swa);spk(w.en);}}>
-          <div className="emo">{w.e}</div><div className="wen">{w.en}</div>
-          {swa&&<div className="wko">{w.ko}</div>}
-          {!swa&&<p style={{color:"#94a3b8",fontSize:"0.82em",marginTop:5}}>👆 터치하면 뜻이 나타나요</p>}
-        </div>
-        <div style={{display:"flex",justifyContent:"center",gap:7,flexWrap:"wrap"}}>
-          <button className="bs" onClick={()=>{setWi(Math.max(0,wi-1));setSwa(false);}}>◀이전</button>
-          <SB t={w.en} sz="lg" lb="🔊발음"/><SB t={`${w.en}. ${w.en}`} lb="🐢천천히"/>
-          <button className="bs" onClick={()=>{setWi(wi+1);setSwa(false);axp(2);setSt(p=>({...p,wl:p.wl+1}));}}>다음▶</button>
-        </div>
-        <div style={{textAlign:"center",marginTop:5,color:"#64748b",fontSize:"0.78em"}}>{wi%ws.length+1}/{ws.length}</div>
-      </div>
-      <div className="card"><div className="sec">🎮 미니게임</div>
-        <div className="actg"><div className="actb" onClick={smg}><div style={{fontSize:"1.7em"}}>🔗</div><div style={{fontWeight:600,fontSize:"0.9em"}}>단어 매칭</div></div><div className="actb" onClick={sqz}><div style={{fontSize:"1.7em"}}>📝</div><div style={{fontWeight:600,fontSize:"0.9em"}}>단어 퀴즈</div></div></div>
-      </div></>;
-    }
-    // SENTENCES
-    if(cs.id===3){
-      if(sv==="sentence"){const sd=SN[si];return<div className="card"><div className="sec">🧩 문장 만들기</div>
-        <div className="hint">💡 뜻: {sd.ko}<br/>📌 힌트: {sd.h}</div>
-        <div className={`sarea ${sa.length?"has":""}`}>
-          {!sa.length&&<span style={{color:"#94a3b8",fontSize:"0.82em"}}>👆 단어를 순서대로 클릭</span>}
-          {sa.map((p,i)=><span key={i} className="chip put" onClick={()=>{setSp2(x=>[...x,p]);setSa(x=>x.filter((_,j)=>j!==i));}}>{p}</span>)}
-        </div>
-        <div style={{display:"flex",flexWrap:"wrap",gap:6,justifyContent:"center",marginBottom:12}}>
-          {sp2.map((p,i)=><span key={i} className="chip src" onClick={()=>{setSa(x=>[...x,p]);setSp2(x=>x.filter((_,j)=>j!==i));}}>{p}</span>)}
-        </div>
-        <div style={{display:"flex",gap:7,justifyContent:"center",flexWrap:"wrap"}}>
-          <button className="bs" onClick={()=>ssent(si)}>🔄다시</button>
-          {sa.length===sd.p.length&&<button className="bp" onClick={csent}>✅확인</button>}
-          <SB t={sd.p.join(" ")} lb="🔊정답"/>
-        </div>
-      </div>;}
-      return<div className="card"><div className="sec">🌉 문장 만들기</div>
-        {SN.map((s,i)=><div key={i} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"8px 0",borderBottom:"1px solid #e2e8f0",gap:6}}>
-          <div style={{flex:1,minWidth:0}}><div style={{fontWeight:600,fontSize:"0.88em"}}>{s.ko}</div><div style={{fontSize:"0.78em",color:"#64748b"}}>{s.p.join(" ")}</div></div>
-          <div style={{display:"flex",gap:4,flexShrink:0}}><SB t={s.p.join(" ")}/><button className="bp" style={{padding:"4px 10px",fontSize:"0.78em"}} onClick={()=>ssent(i)}>도전!</button></div>
-        </div>)}
-      </div>;
-    }
-    // GRAMMAR
-    if(cs.id===4){const g=GR[gi];return<div className="card"><div className="sec">🏰 기초 문법</div>
-      <div style={{textAlign:"center",color:"#64748b",fontSize:"0.78em",marginBottom:5}}>{gi+1}/{GR.length}</div>
-      <div className="rule">📖 규칙: {g.r}</div><div className="hint">💡 뜻: {g.ko}</div>
-      <div style={{textAlign:"center",fontSize:"1.3em",fontFamily:"var(--fd)",margin:"16px 0",fontWeight:600}}>{g.s}</div>
-      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
-        {g.o.map((o,i)=><button key={i} className={`qopt ${gs===i?(i===g.a?"ok":"no"):""}`} onClick={()=>{if(gs!==null)return;setGs(i);if(i===g.a){axp(15);sm("🎉 정답! +15XP");spk(g.s.replace("___",g.o[g.a]));setSt(p=>({...p,tc:p.tc+1,ta:p.ta+1}));}else{sm(`❌ 정답: ${g.o[g.a]}`,"error");setSt(p=>({...p,ta:p.ta+1}));}}}>{o}</button>)}
-      </div>
-      {gs!==null&&<div style={{textAlign:"center",marginTop:12}}><SB t={g.s.replace("___",g.o[g.a])} sz="lg" lb="🔊정답"/><div style={{marginTop:8}}><button className="bp" onClick={()=>{setGi((gi+1)%GR.length);setGs(null);}}>다음▶</button></div></div>}
-    </div>;}
-  };
-  return<div><Toast/><Hdr/>
-    <div className="cnt">
-      <button className="back" onClick={()=>{setV("map");setSv(null);}}>← 맵으로</button>
-      <div style={{textAlign:"center",marginBottom:12}}><span style={{fontSize:"1.7em"}}>{cs.icon}</span><h2 style={{fontFamily:"var(--fd)",color:"white",textShadow:"2px 2px 4px rgba(0,0,0,0.2)"}}>{cs.name}</h2></div>
-      <RS/>
-    </div>
-  </div>;}
+  if (v === "stage" && cs) {
+    var RS = function () {
+      if (cs.id === 1) {
+        var a = ALPHA[ai];
+        if (sv === "write") return /*#__PURE__*/React.createElement("div", {
+          style: S.card
+        }, /*#__PURE__*/React.createElement("div", {
+          style: S.sec
+        }, "✍️ 따라쓰기: " + a.u), /*#__PURE__*/React.createElement("div", {
+          style: {
+            textAlign: "center",
+            marginBottom: 10
+          }
+        }, /*#__PURE__*/React.createElement("span", {
+          style: {
+            fontFamily: "'Fredoka'",
+            fontSize: "3em",
+            color: "#667eea"
+          }
+        }, a.u), /*#__PURE__*/React.createElement("span", {
+          style: {
+            fontFamily: "'Fredoka'",
+            fontSize: "2em",
+            color: "#764ba2",
+            marginLeft: 10
+          }
+        }, a.lo)), /*#__PURE__*/React.createElement("p", {
+          style: {
+            textAlign: "center",
+            color: "#64748b",
+            fontSize: "0.88em"
+          }
+        }, "\uAC00\uC774\uB4DC \uAE00\uC790 \uC704\uC5D0 \uC190\uAC00\uB77D\uC774\uB098 \uB9C8\uC6B0\uC2A4\uB85C \uB530\uB77C \uC368\uBCF4\uC138\uC694!"), /*#__PURE__*/React.createElement(WC, {
+          letter: a.u,
+          onDone: function () {
+            axp(5);
+            sm("✅ " + a.u + " 완료! +5 XP");
+            setSt(function (p) {
+              return Object.assign({}, p, {
+                ap: Object.assign({}, p.ap, {
+                  [a.u]: true
+                })
+              });
+            });
+            if (ai < 25) setAi(function (p) {
+              return p + 1;
+            });
+          }
+        }), /*#__PURE__*/React.createElement("div", {
+          style: {
+            textAlign: "center",
+            marginTop: 10
+          }
+        }, /*#__PURE__*/React.createElement(SB, {
+          t: a.u,
+          sz: "lg",
+          lb: "\uBC1C\uC74C \uB4E3\uAE30"
+        })));
+        return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+          style: S.card
+        }, /*#__PURE__*/React.createElement("div", {
+          style: {
+            textAlign: "center",
+            padding: 16
+          }
+        }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", {
+          style: {
+            fontFamily: "'Fredoka'",
+            fontSize: "5em",
+            fontWeight: 700,
+            color: "#667eea",
+            lineHeight: 1
+          }
+        }, a.u), /*#__PURE__*/React.createElement("span", {
+          style: {
+            fontFamily: "'Fredoka'",
+            fontSize: "3em",
+            color: "#764ba2",
+            marginLeft: 12
+          }
+        }, a.lo)), /*#__PURE__*/React.createElement("div", {
+          style: {
+            fontSize: "1.3em",
+            margin: "10px 0",
+            fontWeight: 600
+          }
+        }, /*#__PURE__*/React.createElement("span", {
+          style: {
+            fontSize: "1.3em",
+            marginRight: 6
+          }
+        }, a.e), a.w), /*#__PURE__*/React.createElement("div", {
+          style: {
+            display: "flex",
+            gap: 7,
+            justifyContent: "center",
+            flexWrap: "wrap",
+            marginBottom: 12
+          }
+        }, /*#__PURE__*/React.createElement(SB, {
+          t: a.u,
+          lb: a.u + " 발음"
+        }), /*#__PURE__*/React.createElement(SB, {
+          t: a.lo,
+          lb: a.lo + " 발음"
+        }), /*#__PURE__*/React.createElement(SB, {
+          t: a.w,
+          lb: a.w + " 발음"
+        })), /*#__PURE__*/React.createElement("div", {
+          style: {
+            display: "flex",
+            gap: 10,
+            justifyContent: "center",
+            flexWrap: "wrap"
+          }
+        }, /*#__PURE__*/React.createElement("button", {
+          style: S.bs,
+          onClick: function () {
+            setAi(Math.max(0, ai - 1));
+          }
+        }, "\u25C0 \uC774\uC804"), /*#__PURE__*/React.createElement("button", {
+          style: S.bp,
+          onClick: function () {
+            setSv2("write");
+          }
+        }, "\u270D\uFE0F \uB530\uB77C\uC4F0\uAE30"), /*#__PURE__*/React.createElement("button", {
+          style: S.bs,
+          onClick: function () {
+            setAi(Math.min(25, ai + 1));
+          }
+        }, "\uB2E4\uC74C \u25B6")))), /*#__PURE__*/React.createElement("div", {
+          style: S.card
+        }, /*#__PURE__*/React.createElement("div", {
+          style: S.sec
+        }, "알파벳 목록 (" + Object.keys(st.ap).length + "/26)"), /*#__PURE__*/React.createElement("div", {
+          style: {
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fill,minmax(40px,1fr))",
+            gap: 5
+          }
+        }, ALPHA.map(function (x, i) {
+          return /*#__PURE__*/React.createElement("div", {
+            key: i,
+            onClick: function () {
+              setAi(i);
+              speak(x.u);
+            },
+            style: {
+              width: 40,
+              height: 40,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              borderRadius: 10,
+              fontFamily: "'Fredoka'",
+              fontWeight: 600,
+              fontSize: "1em",
+              cursor: "pointer",
+              border: "2px solid " + (i === ai ? "#667eea" : st.ap[x.u] ? "#86efac" : "#e2e8f0"),
+              background: i === ai ? "#667eea" : st.ap[x.u] ? "#dcfce7" : "white",
+              color: i === ai ? "white" : "inherit"
+            }
+          }, x.u);
+        }))));
+      }
+      if (cs.id === 2) {
+        var cn = {
+          animals: "🐾 동물",
+          food: "🍽️ 음식",
+          colors: "🎨 색깔",
+          body: "🧍 신체",
+          numbers: "🔢 숫자"
+        };
+        if (sv === "match") return /*#__PURE__*/React.createElement("div", {
+          style: S.card
+        }, /*#__PURE__*/React.createElement("div", {
+          style: S.sec
+        }, "🎮 매칭 게임 (" + cn[wc] + ")"), /*#__PURE__*/React.createElement("p", {
+          style: {
+            color: "#64748b",
+            marginBottom: 10,
+            fontSize: "0.88em"
+          }
+        }, "\uC601\uC5B4 \uB2E8\uC5B4\uC640 \uD55C\uAD6D\uC5B4 \uB73B\uC744 \uC9DD\uC9C0\uC5B4 \uBCF4\uC138\uC694!"), mg && /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+          style: {
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
+            gap: 14
+          }
+        }, /*#__PURE__*/React.createElement("div", {
+          style: {
+            display: "flex",
+            flexDirection: "column",
+            gap: 7
+          }
+        }, /*#__PURE__*/React.createElement("h4", {
+          style: {
+            textAlign: "center",
+            fontSize: "0.88em",
+            color: "#64748b"
+          }
+        }, "\uD83C\uDDFA\uD83C\uDDF8 English"), mg.w.map(function (w, i) {
+          return /*#__PURE__*/React.createElement("div", {
+            key: i,
+            onClick: function () {
+              if (mg.m.indexOf(w.en) === -1) hm("en", i);
+            },
+            style: {
+              padding: 12,
+              borderRadius: 12,
+              textAlign: "center",
+              cursor: "pointer",
+              fontWeight: 600,
+              border: "2px solid " + (mg.m.indexOf(w.en) >= 0 ? "#22c55e" : mg.sel && mg.sel.tp === "en" && mg.sel.ix === i ? "#f59e0b" : "#e2e8f0"),
+              background: mg.m.indexOf(w.en) >= 0 ? "#dcfce7" : mg.sel && mg.sel.tp === "en" && mg.sel.ix === i ? "#fef3c7" : "white",
+              opacity: mg.m.indexOf(w.en) >= 0 ? 0.6 : 1
+            }
+          }, w.e + " " + w.en);
+        })), /*#__PURE__*/React.createElement("div", {
+          style: {
+            display: "flex",
+            flexDirection: "column",
+            gap: 7
+          }
+        }, /*#__PURE__*/React.createElement("h4", {
+          style: {
+            textAlign: "center",
+            fontSize: "0.88em",
+            color: "#64748b"
+          }
+        }, "\uD83C\uDDF0\uD83C\uDDF7 \uD55C\uAD6D\uC5B4"), mg.sk.map(function (w, i) {
+          return /*#__PURE__*/React.createElement("div", {
+            key: i,
+            onClick: function () {
+              if (mg.m.indexOf(w.en) === -1) hm("ko", i);
+            },
+            style: {
+              padding: 12,
+              borderRadius: 12,
+              textAlign: "center",
+              cursor: "pointer",
+              fontWeight: 600,
+              border: "2px solid " + (mg.m.indexOf(w.en) >= 0 ? "#22c55e" : mg.sel && mg.sel.tp === "ko" && mg.sel.ix === i ? "#f59e0b" : "#e2e8f0"),
+              background: mg.m.indexOf(w.en) >= 0 ? "#dcfce7" : mg.sel && mg.sel.tp === "ko" && mg.sel.ix === i ? "#fef3c7" : "white",
+              opacity: mg.m.indexOf(w.en) >= 0 ? 0.6 : 1
+            }
+          }, w.ko);
+        }))), /*#__PURE__*/React.createElement("div", {
+          style: {
+            textAlign: "center",
+            marginTop: 10,
+            color: "#64748b",
+            fontSize: "0.85em"
+          }
+        }, "매칭: " + mg.m.length + "/" + mg.w.length + " • 시도: " + mg.at), mg.m.length === mg.w.length && /*#__PURE__*/React.createElement("div", {
+          style: {
+            textAlign: "center",
+            marginTop: 14
+          }
+        }, /*#__PURE__*/React.createElement("button", {
+          style: S.bp,
+          onClick: function () {
+            setSv2(null);
+          }
+        }, "\uD83C\uDF89 \uB3CC\uC544\uAC00\uAE30"))));
+        var ws = WORDS[wc];
+        var w = ws[wi % ws.length];
+        return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+          style: S.card
+        }, /*#__PURE__*/React.createElement("div", {
+          style: S.sec
+        }, "\uD83D\uDCDA \uB2E8\uC5B4 \uD559\uC2B5"), /*#__PURE__*/React.createElement("div", {
+          style: {
+            display: "flex",
+            gap: 6,
+            flexWrap: "wrap",
+            marginBottom: 14
+          }
+        }, Object.entries(cn).map(function (item) {
+          var k = item[0],
+            n = item[1];
+          return /*#__PURE__*/React.createElement("button", {
+            key: k,
+            onClick: function () {
+              setWc(k);
+              setWi(0);
+              setSwa(false);
+            },
+            style: {
+              padding: "6px 14px",
+              borderRadius: 12,
+              border: "2px solid " + (wc === k ? "#667eea" : "#e2e8f0"),
+              background: wc === k ? "#667eea" : "white",
+              color: wc === k ? "white" : "inherit",
+              cursor: "pointer",
+              fontSize: "0.88em",
+              fontFamily: "'Noto Sans KR'"
+            }
+          }, n);
+        })), /*#__PURE__*/React.createElement("div", {
+          onClick: function () {
+            setSwa(!swa);
+            speak(w.en);
+          },
+          style: {
+            background: "linear-gradient(135deg,#ffecd2,#fcb69f)",
+            borderRadius: 24,
+            padding: 30,
+            textAlign: "center",
+            minHeight: 180,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            cursor: "pointer",
+            margin: "14px 0"
+          }
+        }, /*#__PURE__*/React.createElement("div", {
+          style: {
+            fontSize: "3.5em",
+            marginBottom: 10
+          }
+        }, w.e), /*#__PURE__*/React.createElement("div", {
+          style: {
+            fontFamily: "'Fredoka'",
+            fontSize: "2.3em",
+            fontWeight: 700,
+            color: "#7c3aed"
+          }
+        }, w.en), swa && /*#__PURE__*/React.createElement("div", {
+          style: {
+            fontSize: "1.2em",
+            color: "#92400e",
+            marginTop: 6
+          }
+        }, w.ko), !swa && /*#__PURE__*/React.createElement("p", {
+          style: {
+            color: "#94a3b8",
+            fontSize: "0.88em",
+            marginTop: 6
+          }
+        }, "\uD83D\uDC46 \uD130\uCE58\uD558\uBA74 \uB73B\uC774 \uB098\uD0C0\uB098\uC694")), /*#__PURE__*/React.createElement("div", {
+          style: {
+            display: "flex",
+            justifyContent: "center",
+            gap: 8,
+            flexWrap: "wrap"
+          }
+        }, /*#__PURE__*/React.createElement("button", {
+          style: S.bs,
+          onClick: function () {
+            setWi(Math.max(0, wi - 1));
+            setSwa(false);
+          }
+        }, "\u25C0 \uC774\uC804"), /*#__PURE__*/React.createElement(SB, {
+          t: w.en,
+          sz: "lg",
+          lb: "\uD83D\uDD0A \uBC1C\uC74C"
+        }), /*#__PURE__*/React.createElement(SB, {
+          t: w.en + ". " + w.en,
+          lb: "\uD83D\uDC22 \uCC9C\uCC9C\uD788"
+        }), /*#__PURE__*/React.createElement("button", {
+          style: S.bs,
+          onClick: function () {
+            setWi(wi + 1);
+            setSwa(false);
+            axp(2);
+            setSt(function (p) {
+              return Object.assign({}, p, {
+                wl: p.wl + 1
+              });
+            });
+          }
+        }, "\uB2E4\uC74C \u25B6")), /*#__PURE__*/React.createElement("div", {
+          style: {
+            textAlign: "center",
+            marginTop: 6,
+            color: "#64748b",
+            fontSize: "0.82em"
+          }
+        }, wi % ws.length + 1 + " / " + ws.length)), /*#__PURE__*/React.createElement("div", {
+          style: S.card
+        }, /*#__PURE__*/React.createElement("div", {
+          style: S.sec
+        }, "\uD83C\uDFAE \uBBF8\uB2C8\uAC8C\uC784"), /*#__PURE__*/React.createElement("div", {
+          style: {
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
+            gap: 10
+          }
+        }, /*#__PURE__*/React.createElement("div", {
+          onClick: smg,
+          style: {
+            padding: 16,
+            borderRadius: 16,
+            border: "2px solid #e2e8f0",
+            background: "white",
+            cursor: "pointer",
+            textAlign: "center"
+          }
+        }, /*#__PURE__*/React.createElement("div", {
+          style: {
+            fontSize: "2em"
+          }
+        }, "\uD83D\uDD17"), /*#__PURE__*/React.createElement("div", {
+          style: {
+            fontWeight: 600,
+            marginTop: 4
+          }
+        }, "\uB2E8\uC5B4 \uB9E4\uCE6D")), /*#__PURE__*/React.createElement("div", {
+          onClick: sqz,
+          style: {
+            padding: 16,
+            borderRadius: 16,
+            border: "2px solid #e2e8f0",
+            background: "white",
+            cursor: "pointer",
+            textAlign: "center"
+          }
+        }, /*#__PURE__*/React.createElement("div", {
+          style: {
+            fontSize: "2em"
+          }
+        }, "\uD83D\uDCDD"), /*#__PURE__*/React.createElement("div", {
+          style: {
+            fontWeight: 600,
+            marginTop: 4
+          }
+        }, "\uB2E8\uC5B4 \uD034\uC988")))));
+      }
+      if (cs.id === 3) {
+        if (sv === "sentence") {
+          var sd = SENTS[si];
+          return /*#__PURE__*/React.createElement("div", {
+            style: S.card
+          }, /*#__PURE__*/React.createElement("div", {
+            style: S.sec
+          }, "\uD83E\uDDE9 \uBB38\uC7A5 \uB9CC\uB4E4\uAE30"), /*#__PURE__*/React.createElement("div", {
+            style: {
+              background: "#fef3c7",
+              border: "2px solid #fcd34d",
+              borderRadius: 12,
+              padding: "10px 14px",
+              fontSize: "0.9em",
+              margin: "7px 0",
+              color: "#92400e"
+            }
+          }, "💡 뜻: " + sd.ko, /*#__PURE__*/React.createElement("br", null), "📌 힌트: " + sd.h), /*#__PURE__*/React.createElement("div", {
+            style: {
+              minHeight: 56,
+              border: "3px dashed " + (sa.length > 0 ? "#667eea" : "#cbd5e1"),
+              borderRadius: 16,
+              padding: 10,
+              display: "flex",
+              flexWrap: "wrap",
+              gap: 8,
+              alignItems: "center",
+              margin: "14px 0",
+              background: "#f8fafc"
+            }
+          }, sa.length === 0 && /*#__PURE__*/React.createElement("span", {
+            style: {
+              color: "#94a3b8",
+              fontSize: "0.88em"
+            }
+          }, "\uD83D\uDC46 \uC544\uB798 \uB2E8\uC5B4\uB97C \uC21C\uC11C\uB300\uB85C \uD130\uCE58\uD558\uC138\uC694"), sa.map(function (p, i) {
+            return /*#__PURE__*/React.createElement("span", {
+              key: i,
+              onClick: function () {
+                setSp(function (x) {
+                  return x.concat([p]);
+                });
+                setSa(function (x) {
+                  return x.filter(function (_, j) {
+                    return j !== i;
+                  });
+                });
+              },
+              style: Object.assign({}, S.chip, {
+                background: "#667eea",
+                color: "white"
+              })
+            }, p);
+          })), /*#__PURE__*/React.createElement("div", {
+            style: {
+              display: "flex",
+              flexWrap: "wrap",
+              gap: 8,
+              justifyContent: "center",
+              marginBottom: 14
+            }
+          }, sp.map(function (p, i) {
+            return /*#__PURE__*/React.createElement("span", {
+              key: i,
+              onClick: function () {
+                setSa(function (x) {
+                  return x.concat([p]);
+                });
+                setSp(function (x) {
+                  return x.filter(function (_, j) {
+                    return j !== i;
+                  });
+                });
+              },
+              style: Object.assign({}, S.chip, {
+                background: "#e0e7ff",
+                color: "#3730a3",
+                border: "2px solid #a5b4fc"
+              })
+            }, p);
+          })), /*#__PURE__*/React.createElement("div", {
+            style: {
+              display: "flex",
+              gap: 8,
+              justifyContent: "center",
+              flexWrap: "wrap"
+            }
+          }, /*#__PURE__*/React.createElement("button", {
+            style: S.bs,
+            onClick: function () {
+              ssent(si);
+            }
+          }, "\uD83D\uDD04 \uB2E4\uC2DC"), sa.length === sd.p.length && /*#__PURE__*/React.createElement("button", {
+            style: S.bp,
+            onClick: csent
+          }, "\u2705 \uC815\uB2F5 \uD655\uC778"), /*#__PURE__*/React.createElement(SB, {
+            t: sd.p.join(" "),
+            lb: "\uD83D\uDD0A \uC815\uB2F5 \uBC1C\uC74C"
+          })));
+        }
+        return /*#__PURE__*/React.createElement("div", {
+          style: S.card
+        }, /*#__PURE__*/React.createElement("div", {
+          style: S.sec
+        }, "\uD83C\uDF09 \uBB38\uC7A5 \uB9CC\uB4E4\uAE30 \uC5F0\uC2B5"), /*#__PURE__*/React.createElement("p", {
+          style: {
+            color: "#64748b",
+            marginBottom: 14,
+            fontSize: "0.88em"
+          }
+        }, "\uB2E8\uC5B4\uB97C \uC62C\uBC14\uB978 \uC21C\uC11C\uB85C \uBC30\uC5F4\uD558\uC5EC \uBB38\uC7A5\uC744 \uC644\uC131\uD558\uC138\uC694!"), SENTS.map(function (s, i) {
+          return /*#__PURE__*/React.createElement("div", {
+            key: i,
+            style: {
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              padding: "10px 0",
+              borderBottom: "1px solid #e2e8f0",
+              gap: 8
+            }
+          }, /*#__PURE__*/React.createElement("div", {
+            style: {
+              flex: 1,
+              minWidth: 0
+            }
+          }, /*#__PURE__*/React.createElement("div", {
+            style: {
+              fontWeight: 600,
+              fontSize: "0.92em"
+            }
+          }, s.ko), /*#__PURE__*/React.createElement("div", {
+            style: {
+              fontSize: "0.82em",
+              color: "#64748b"
+            }
+          }, s.p.join(" "))), /*#__PURE__*/React.createElement("div", {
+            style: {
+              display: "flex",
+              gap: 5,
+              flexShrink: 0
+            }
+          }, /*#__PURE__*/React.createElement(SB, {
+            t: s.p.join(" ")
+          }), /*#__PURE__*/React.createElement("button", {
+            style: Object.assign({}, S.bp, {
+              padding: "6px 14px",
+              fontSize: "0.85em"
+            }),
+            onClick: function () {
+              ssent(i);
+            }
+          }, "\uB3C4\uC804!")));
+        }));
+      }
+      if (cs.id === 4) {
+        var g = GRAM[gi];
+        return /*#__PURE__*/React.createElement("div", {
+          style: S.card
+        }, /*#__PURE__*/React.createElement("div", {
+          style: S.sec
+        }, "\uD83C\uDFF0 \uAE30\uCD08 \uBB38\uBC95"), /*#__PURE__*/React.createElement("div", {
+          style: {
+            textAlign: "center",
+            color: "#64748b",
+            fontSize: "0.85em",
+            marginBottom: 6
+          }
+        }, gi + 1 + " / " + GRAM.length), /*#__PURE__*/React.createElement("div", {
+          style: {
+            background: "#ede9fe",
+            border: "2px solid #c4b5fd",
+            borderRadius: 12,
+            padding: "10px 14px",
+            fontSize: "0.9em",
+            margin: "7px 0",
+            color: "#5b21b6"
+          }
+        }, "📖 규칙: " + g.r), /*#__PURE__*/React.createElement("div", {
+          style: {
+            background: "#fef3c7",
+            border: "2px solid #fcd34d",
+            borderRadius: 12,
+            padding: "10px 14px",
+            fontSize: "0.9em",
+            margin: "7px 0",
+            color: "#92400e"
+          }
+        }, "💡 뜻: " + g.ko), /*#__PURE__*/React.createElement("div", {
+          style: {
+            textAlign: "center",
+            fontSize: "1.5em",
+            fontFamily: "'Fredoka'",
+            margin: "20px 0",
+            fontWeight: 600
+          }
+        }, g.s), /*#__PURE__*/React.createElement("div", {
+          style: {
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
+            gap: 10
+          }
+        }, g.o.map(function (o, i) {
+          return /*#__PURE__*/React.createElement("button", {
+            key: i,
+            onClick: function () {
+              if (gs !== null) return;
+              setGs(i);
+              if (i === g.a) {
+                axp(15);
+                sm("🎉 정답! +15 XP");
+                speak(g.s.replace("___", g.o[g.a]));
+                setSt(function (p) {
+                  return Object.assign({}, p, {
+                    tc: p.tc + 1,
+                    ta: p.ta + 1
+                  });
+                });
+              } else {
+                sm("❌ 정답: " + g.o[g.a], "error");
+                setSt(function (p) {
+                  return Object.assign({}, p, {
+                    ta: p.ta + 1
+                  });
+                });
+              }
+            },
+            style: Object.assign({}, S.qopt, gs === i ? i === g.a ? {
+              borderColor: "#22c55e",
+              background: "#dcfce7"
+            } : {
+              borderColor: "#ef4444",
+              background: "#fee2e2"
+            } : {})
+          }, o);
+        })), gs !== null && /*#__PURE__*/React.createElement("div", {
+          style: {
+            textAlign: "center",
+            marginTop: 14
+          }
+        }, /*#__PURE__*/React.createElement(SB, {
+          t: g.s.replace("___", g.o[g.a]),
+          sz: "lg",
+          lb: "\uD83D\uDD0A \uC815\uB2F5 \uBB38\uC7A5 \uB4E3\uAE30"
+        }), /*#__PURE__*/React.createElement("div", {
+          style: {
+            marginTop: 10
+          }
+        }, /*#__PURE__*/React.createElement("button", {
+          style: S.bp,
+          onClick: function () {
+            setGi((gi + 1) % GRAM.length);
+            setGs(null);
+          }
+        }, "\uB2E4\uC74C \uBB38\uC81C \u25B6"))));
+      }
+    };
+    return /*#__PURE__*/React.createElement("div", {
+      style: S.app
+    }, /*#__PURE__*/React.createElement(Toast, null), /*#__PURE__*/React.createElement(Hdr, null), /*#__PURE__*/React.createElement("div", {
+      style: S.cnt
+    }, /*#__PURE__*/React.createElement("button", {
+      onClick: function () {
+        setV("map");
+        setSv2(null);
+      },
+      style: {
+        background: "rgba(255,255,255,0.2)",
+        border: "none",
+        color: "white",
+        padding: "6px 16px",
+        borderRadius: 10,
+        cursor: "pointer",
+        fontFamily: "'Noto Sans KR'",
+        fontSize: "0.9em",
+        marginBottom: 14
+      }
+    }, "\u2190 \uBAA8\uD5D8 \uB9F5\uC73C\uB85C"), /*#__PURE__*/React.createElement("div", {
+      style: {
+        textAlign: "center",
+        marginBottom: 14
+      }
+    }, /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontSize: "1.8em"
+      }
+    }, cs.icon), /*#__PURE__*/React.createElement("h2", {
+      style: {
+        fontFamily: "'Fredoka'",
+        color: "white",
+        textShadow: "2px 2px 4px rgba(0,0,0,0.2)"
+      }
+    }, cs.name)), /*#__PURE__*/React.createElement(RS, null)));
+  }
 
   // QUIZ
-  if(v==="quiz"&&qq.length>0){const q=qq[qi];return<div><Toast/><Hdr/>
-    <div className="cnt"><div className="card">
-      <div style={{display:"flex",alignItems:"center",marginBottom:12}}>
-        <span style={{fontWeight:600}}>Q{qi+1}</span>
-        <div className="qpbg"><div className="qpfl" style={{width:`${((qi+1)/qq.length)*100}%`}}/></div>
-        <span style={{fontWeight:600,color:"var(--pri)"}}>{qs}점</span>
-      </div>
-      {q.tp==="listen"&&<div style={{textAlign:"center",marginBottom:8}}><button className="spk lg" onClick={()=>spk(q.sp)} style={{fontSize:"1.3em",padding:"11px 22px"}}>🔊 듣기</button><p style={{color:"#64748b",marginTop:4,fontSize:"0.78em"}}>발음을 듣고 맞는 단어를 고르세요</p></div>}
-      <div style={{fontSize:"1.15em",fontWeight:600,textAlign:"center",margin:"14px 0",fontFamily:"var(--fd)"}}>{q.q}</div>
-      {q.r&&<div className="rule" style={{marginBottom:8}}>📖 {q.r}</div>}
-      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
-        {q.o.map((o,i)=><button key={i} className={`qopt ${qa?(i===q.a?"ok":""):""}`} onClick={()=>aqz(i)}>{o}</button>)}
-      </div>
-      {qa&&<div style={{textAlign:"center",marginTop:12}}>
-        <div style={{fontSize:"1.05em",fontWeight:600,color:sr==="ok"?"#16a34a":"#ef4444",marginBottom:8}}>{sr==="ok"?"🎉 정답!":`❌ 정답: ${q.o[q.a]}`}</div>
-        <button className="bp" onClick={nqz}>{qi+1>=qq.length?"결과 보기":"다음▶"}</button>
-      </div>}
-    </div></div>
-  </div>;}
+  if (v === "quiz" && qq.length > 0) {
+    var q = qq[qi];
+    return /*#__PURE__*/React.createElement("div", {
+      style: S.app
+    }, /*#__PURE__*/React.createElement(Toast, null), /*#__PURE__*/React.createElement(Hdr, null), /*#__PURE__*/React.createElement("div", {
+      style: S.cnt
+    }, /*#__PURE__*/React.createElement("div", {
+      style: S.card
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        alignItems: "center",
+        marginBottom: 14
+      }
+    }, /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontWeight: 600
+      }
+    }, "Q" + (qi + 1)), /*#__PURE__*/React.createElement("div", {
+      style: {
+        background: "#e2e8f0",
+        borderRadius: 10,
+        height: 8,
+        flex: 1,
+        margin: "0 14px",
+        overflow: "hidden"
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        height: "100%",
+        background: "linear-gradient(90deg,#667eea,#f093fb)",
+        borderRadius: 10,
+        width: (qi + 1) / qq.length * 100 + "%"
+      }
+    })), /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontWeight: 600,
+        color: "#667eea"
+      }
+    }, qs + "점")), q.tp === "listen" && /*#__PURE__*/React.createElement("div", {
+      style: {
+        textAlign: "center",
+        marginBottom: 12
+      }
+    }, /*#__PURE__*/React.createElement("button", {
+      onClick: function () {
+        speak(q.sp);
+      },
+      style: {
+        background: "linear-gradient(135deg,#43e97b,#38f9d7)",
+        color: "#1a5c3a",
+        border: "none",
+        padding: "14px 28px",
+        borderRadius: 14,
+        cursor: "pointer",
+        fontSize: "1.3em",
+        fontWeight: 600,
+        fontFamily: "'Noto Sans KR'"
+      }
+    }, "\uD83D\uDD0A \uB4E3\uAE30"), /*#__PURE__*/React.createElement("p", {
+      style: {
+        color: "#64748b",
+        marginTop: 6,
+        fontSize: "0.85em"
+      }
+    }, "\uBC1C\uC74C\uC744 \uB4E3\uACE0 \uB9DE\uB294 \uB2E8\uC5B4\uB97C \uACE0\uB974\uC138\uC694")), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: "1.2em",
+        fontWeight: 600,
+        textAlign: "center",
+        margin: "18px 0",
+        fontFamily: "'Fredoka'"
+      }
+    }, q.q), q.r && /*#__PURE__*/React.createElement("div", {
+      style: {
+        background: "#ede9fe",
+        border: "2px solid #c4b5fd",
+        borderRadius: 12,
+        padding: "9px 14px",
+        fontSize: "0.88em",
+        margin: "7px 0 10px",
+        color: "#5b21b6"
+      }
+    }, "📖 " + q.r), /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "grid",
+        gridTemplateColumns: "1fr 1fr",
+        gap: 10
+      }
+    }, q.o.map(function (o, i) {
+      return /*#__PURE__*/React.createElement("button", {
+        key: i,
+        onClick: function () {
+          aqz(i);
+        },
+        style: Object.assign({}, S.qopt, qa && i === q.a ? {
+          borderColor: "#22c55e",
+          background: "#dcfce7"
+        } : {})
+      }, o);
+    })), qa && /*#__PURE__*/React.createElement("div", {
+      style: {
+        textAlign: "center",
+        marginTop: 14
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: "1.1em",
+        fontWeight: 600,
+        color: sr === "ok" ? "#16a34a" : "#ef4444",
+        marginBottom: 10
+      }
+    }, sr === "ok" ? "🎉 정답입니다!" : "❌ 오답! 정답: " + q.o[q.a]), /*#__PURE__*/React.createElement("button", {
+      style: S.bp,
+      onClick: nqz
+    }, qi + 1 >= qq.length ? "결과 보기" : "다음 문제 ▶")))));
+  }
 
   // RESULT
-  if(v==="result"){const pct=Math.round((qs/qq.length)*100);return<div><Toast/><Hdr/>
-    <div className="cnt"><div className="card" style={{textAlign:"center",padding:24}}>
-      <div style={{fontSize:"2.5em",marginBottom:5}}>{pct>=80?"🏆":pct>=50?"👍":"💪"}</div>
-      <h2 style={{fontFamily:"var(--fd)",marginBottom:5}}>퀴즈 완료!</h2>
-      <div style={{fontFamily:"var(--fd)",fontSize:"3em",fontWeight:700,color:"var(--pri)"}}>{qs}/{qq.length}</div>
-      <p style={{color:"#64748b",margin:"5px 0 12px"}}>정답률:{pct}% • +{qs*10}XP</p>
-      <div style={{display:"flex",gap:8,justifyContent:"center",flexWrap:"wrap"}}><button className="bp" onClick={sqz}>🔄다시</button><button className="bs" onClick={()=>setV("map")}>🗺️맵</button></div>
-    </div></div>
-  </div>;}
+  if (v === "result") {
+    var pct = Math.round(qs / qq.length * 100);
+    return /*#__PURE__*/React.createElement("div", {
+      style: S.app
+    }, /*#__PURE__*/React.createElement(Toast, null), /*#__PURE__*/React.createElement(Hdr, null), /*#__PURE__*/React.createElement("div", {
+      style: S.cnt
+    }, /*#__PURE__*/React.createElement("div", {
+      style: Object.assign({}, S.card, {
+        textAlign: "center",
+        padding: 30
+      })
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: "3em",
+        marginBottom: 6
+      }
+    }, pct >= 80 ? "🏆" : pct >= 50 ? "👍" : "💪"), /*#__PURE__*/React.createElement("h2", {
+      style: {
+        fontFamily: "'Fredoka'",
+        marginBottom: 6
+      }
+    }, "\uD034\uC988 \uC644\uB8CC!"), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontFamily: "'Fredoka'",
+        fontSize: "3.5em",
+        fontWeight: 700,
+        color: "#667eea"
+      }
+    }, qs + "/" + qq.length), /*#__PURE__*/React.createElement("p", {
+      style: {
+        fontSize: "1em",
+        color: "#64748b",
+        margin: "6px 0 16px"
+      }
+    }, "정답률: " + pct + "% • 획득 XP: +" + qs * 10), /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        gap: 10,
+        justifyContent: "center",
+        flexWrap: "wrap"
+      }
+    }, /*#__PURE__*/React.createElement("button", {
+      style: S.bp,
+      onClick: sqz
+    }, "\uD83D\uDD04 \uB2E4\uC2DC \uB3C4\uC804"), /*#__PURE__*/React.createElement("button", {
+      style: S.bs,
+      onClick: function () {
+        setV("map");
+      }
+    }, "\uD83D\uDDFA\uFE0F \uB9F5\uC73C\uB85C")))));
+  }
 
   // PROFILE
-  if(v==="profile")return<div><Toast/><Hdr/>
-    <div className="cnt">
-      <div className="card" style={{textAlign:"center",padding:16}}>
-        <div style={{fontSize:"3em",marginBottom:5}}>🧙</div>
-        <h2 style={{fontFamily:"var(--fd)"}}>{st.name}</h2>
-        <div style={{display:"flex",gap:10,justifyContent:"center",flexWrap:"wrap",marginTop:5}}>
-          <span className="sbdg" style={{background:"var(--pri)"}}>⭐Lv.{st.lv}</span>
-          <span className="sbdg" style={{background:"var(--yellow)"}}>✨{st.xp}XP</span>
-          <span className="sbdg" style={{background:"var(--red)"}}>🔥{st.sk}일</span>
-        </div>
-      </div>
-      <div className="stgrid">
-        {[[st.qc,"퀴즈완료"],[st.wl,"학습단어"],[st.sb,"문장완성"],[(st.ta?Math.round(st.tc/st.ta*100):0)+"%","정답률"]].map(([v2,l],i)=><div key={i} className="stcard"><div className="stval">{v2}</div><div className="stlbl">{l}</div></div>)}
-      </div>
-      <div className="card"><div className="sec">🎖️ 배지 ({st.badges.length}/{BADGES.length})</div>
-        <div className="bgrid">{BADGES.map(b=><div key={b.id} className={`bcard ${st.badges.includes(b.id)?"on":"off"}`}>
-          <div style={{fontSize:"1.8em"}}>{b.icon}</div><div style={{fontSize:"0.78em",fontWeight:600,marginTop:2}}>{b.name}</div><div style={{fontSize:"0.68em",color:"#64748b"}}>{b.desc}</div>
-        </div>)}</div>
-      </div>
-    </div>
-  </div>;
+  if (v === "profile") return /*#__PURE__*/React.createElement("div", {
+    style: S.app
+  }, /*#__PURE__*/React.createElement(Toast, null), /*#__PURE__*/React.createElement(Hdr, null), /*#__PURE__*/React.createElement("div", {
+    style: S.cnt
+  }, /*#__PURE__*/React.createElement("div", {
+    style: Object.assign({}, S.card, {
+      textAlign: "center",
+      padding: 20
+    })
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: "3.5em",
+      marginBottom: 6
+    }
+  }, "\uD83E\uDDD9"), /*#__PURE__*/React.createElement("h2", {
+    style: {
+      fontFamily: "'Fredoka'"
+    }
+  }, st.name), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 10,
+      justifyContent: "center",
+      flexWrap: "wrap",
+      marginTop: 8
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: Object.assign({}, S.sb, {
+      background: "#667eea"
+    })
+  }, "⭐ Lv." + st.lv), /*#__PURE__*/React.createElement("span", {
+    style: Object.assign({}, S.sb, {
+      background: "#f59e0b"
+    })
+  }, "✨ " + st.xp + " XP"), /*#__PURE__*/React.createElement("span", {
+    style: Object.assign({}, S.sb, {
+      background: "#ef4444"
+    })
+  }, "🔥 " + st.sk + "일"))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "grid",
+      gridTemplateColumns: "repeat(auto-fit,minmax(130px,1fr))",
+      gap: 10,
+      marginBottom: 14
+    }
+  }, [[st.qc, "퀴즈 완료"], [st.wl, "학습 단어"], [st.sb, "문장 완성"], [(st.ta ? Math.round(st.tc / st.ta * 100) : 0) + "%", "정답률"]].map(function (item, i) {
+    return /*#__PURE__*/React.createElement("div", {
+      key: i,
+      style: Object.assign({}, S.card, {
+        textAlign: "center",
+        padding: 14
+      })
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontFamily: "'Fredoka'",
+        fontSize: "1.8em",
+        fontWeight: 700,
+        color: "#667eea"
+      }
+    }, item[0]), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: "0.82em",
+        color: "#64748b",
+        marginTop: 3
+      }
+    }, item[1]));
+  })), /*#__PURE__*/React.createElement("div", {
+    style: S.card
+  }, /*#__PURE__*/React.createElement("div", {
+    style: S.sec
+  }, "🎖️ 배지 (" + st.badges.length + "/" + BADGES.length + ")"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "grid",
+      gridTemplateColumns: "repeat(auto-fill,minmax(110px,1fr))",
+      gap: 10
+    }
+  }, BADGES.map(function (b) {
+    var earned = st.badges.indexOf(b.id) >= 0;
+    return /*#__PURE__*/React.createElement("div", {
+      key: b.id,
+      style: {
+        textAlign: "center",
+        padding: "14px 6px",
+        borderRadius: 16,
+        border: "2px solid " + (earned ? "#f59e0b" : "#e2e8f0"),
+        background: earned ? "#fffbeb" : "white",
+        opacity: earned ? 1 : 0.4,
+        filter: earned ? "none" : "grayscale(1)"
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: "2.2em"
+      }
+    }, b.icon), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: "0.82em",
+        fontWeight: 600,
+        marginTop: 3
+      }
+    }, b.name), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: "0.72em",
+        color: "#64748b"
+      }
+    }, b.desc));
+  }))), /*#__PURE__*/React.createElement("div", {
+    style: Object.assign({}, S.card, {
+      textAlign: "center"
+    })
+  }, /*#__PURE__*/React.createElement("button", {
+    onClick: resetData,
+    style: {
+      background: "#fee2e2",
+      color: "#991b1b",
+      border: "2px solid #fca5a5",
+      padding: "8px 20px",
+      borderRadius: 12,
+      cursor: "pointer",
+      fontFamily: "'Noto Sans KR'",
+      fontWeight: 600,
+      fontSize: "0.88em"
+    }
+  }, "\uD83D\uDDD1\uFE0F \uB370\uC774\uD130 \uCD08\uAE30\uD654"))));
 
   // LEADERBOARD
-  if(v==="lb"){const all=[...SAMPLE,{...st,name:st.name+" (나)",wl:st.wl}].sort((a,b)=>b.xp-a.xp);return<div><Toast/><Hdr/>
-    <div className="cnt"><div className="card"><div className="sec">🏆 전체 순위</div>
-      {all.map((s,i)=><div key={i} className={`lb ${i===0?"t1":i===1?"t2":i===2?"t3":""}`}>
-        <div style={{fontFamily:"var(--fd)",fontSize:"1.2em",fontWeight:700,width:32,textAlign:"center"}}>{i<3?["🥇","🥈","🥉"][i]:i+1}</div>
-        <div style={{flex:1}}><div style={{fontWeight:600}}>{s.name}</div><div style={{fontSize:"0.72em",color:"#64748b"}}>Lv.{s.lv}•🔥{s.sk}일•📚{s.wl||0}단어</div></div>
-        <div style={{fontFamily:"var(--fd)",fontSize:"1em",fontWeight:600,color:"var(--pri)"}}>{s.xp}XP</div>
-      </div>)}
-    </div></div>
-  </div>;}
-
-  return<div></div>;
+  if (v === "lb") {
+    var all = SAMPLE.concat([Object.assign({}, st, {
+      name: st.name + " (나)",
+      wl: st.wl
+    })]).sort(function (a, b) {
+      return b.xp - a.xp;
+    });
+    return /*#__PURE__*/React.createElement("div", {
+      style: S.app
+    }, /*#__PURE__*/React.createElement(Toast, null), /*#__PURE__*/React.createElement(Hdr, null), /*#__PURE__*/React.createElement("div", {
+      style: S.cnt
+    }, /*#__PURE__*/React.createElement("div", {
+      style: S.card
+    }, /*#__PURE__*/React.createElement("div", {
+      style: S.sec
+    }, "\uD83C\uDFC6 \uC804\uCCB4 \uC21C\uC704"), all.map(function (s, i) {
+      return /*#__PURE__*/React.createElement("div", {
+        key: i,
+        style: {
+          display: "flex",
+          alignItems: "center",
+          gap: 10,
+          padding: "10px 14px",
+          borderRadius: 12,
+          marginBottom: 7,
+          background: i === 0 ? "#fffbeb" : i < 3 ? "#f9fafb" : "white",
+          border: "2px solid " + (i === 0 ? "#fbbf24" : i === 1 ? "#9ca3af" : i === 2 ? "#d97706" : "#e2e8f0")
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          fontFamily: "'Fredoka'",
+          fontSize: "1.3em",
+          fontWeight: 700,
+          width: 34,
+          textAlign: "center"
+        }
+      }, i < 3 ? ["🥇", "🥈", "🥉"][i] : i + 1), /*#__PURE__*/React.createElement("div", {
+        style: {
+          flex: 1
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          fontWeight: 600
+        }
+      }, s.name), /*#__PURE__*/React.createElement("div", {
+        style: {
+          fontSize: "0.78em",
+          color: "#64748b"
+        }
+      }, "Lv." + s.lv + " • 🔥" + s.sk + "일 • 📚" + (s.wl || 0) + "단어")), /*#__PURE__*/React.createElement("div", {
+        style: {
+          fontFamily: "'Fredoka'",
+          fontSize: "1.1em",
+          fontWeight: 600,
+          color: "#667eea"
+        }
+      }, s.xp + " XP"));
+    }))));
+  }
+  return /*#__PURE__*/React.createElement("div", {
+    style: S.app
+  });
 }
-
-ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
-</script>
-</body>
-</html>
-const {useState,useEffect,useRef,useCallback}=React;
-const STAGES=[{id:1,name:"알파벳 마을",icon:"🏘️",desc:"알파벳을 배우고 써보자!",color:"#4CAF50",uxp:0},{id:2,name:"단어의 숲",icon:"🌲",desc:"기본 단어를 마스터!",color:"#2196F3",uxp:100},{id:3,name:"문장의 다리",icon:"🌉",desc:"문장을 만들자!",color:"#FF9800",uxp:300},{id:4,name:"문법의 성",icon:"🏰",desc:"문법을 정복하자!",color:"#9C27B0",uxp:600}];
-const BADGES=[{id:"f",name:"첫 발걸음",icon:"👣",desc:"첫 퀴즈",c:s=>s.qc>=1},{id:"w",name:"단어 사냥꾼",icon:"🎯",desc:"단어50개",c:s=>s.wl>=50},{id:"s3",name:"3일 연속",icon:"🔥",desc:"3일연속",c:s=>s.sk>=3},{id:"s7",name:"주간챔피언",icon:"⭐",desc:"7일연속",c:s=>s.sk>=7},{id:"p",name:"퍼펙트",icon:"💎",desc:"만점",c:s=>s.ps>=1},{id:"e",name:"탐험가",icon:"🧭",desc:"전스테이지",c:s=>s.sv>=4},{id:"t",name:"문장장인",icon:"📝",desc:"문장10회",c:s=>s.sb>=10},{id:"l",name:"Lv.10",icon:"🏆",desc:"레벨10",c:s=>s.lv>=10}];
-const AL="ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").map((l,i)=>({u:l,lo:l.toLowerCase(),w:["Apple","Bear","Cat","Dog","Elephant","Fish","Grape","Hat","Ice cream","Jelly","Kite","Lion","Moon","Nest","Orange","Penguin","Queen","Rabbit","Sun","Tree","Umbrella","Violin","Water","X-ray","Yoga","Zebra"][i],e:["🍎","🐻","🐱","🐶","🐘","🐟","🍇","🎩","🍦","🍬","🪁","🦁","🌙","🪺","🍊","🐧","👑","🐰","☀️","🌳","☂️","🎻","💧","📡","🧘","🦓"][i]}));
-const WD={animals:[{en:"cat",ko:"고양이",e:"🐱"},{en:"dog",ko:"개",e:"🐶"},{en:"bird",ko:"새",e:"🐦"},{en:"fish",ko:"물고기",e:"🐟"},{en:"rabbit",ko:"토끼",e:"🐰"},{en:"bear",ko:"곰",e:"🐻"},{en:"lion",ko:"사자",e:"🦁"},{en:"elephant",ko:"코끼리",e:"🐘"},{en:"monkey",ko:"원숭이",e:"🐵"},{en:"horse",ko:"말",e:"🐴"}],food:[{en:"apple",ko:"사과",e:"🍎"},{en:"bread",ko:"빵",e:"🍞"},{en:"milk",ko:"우유",e:"🥛"},{en:"rice",ko:"쌀/밥",e:"🍚"},{en:"water",ko:"물",e:"💧"},{en:"egg",ko:"달걀",e:"🥚"},{en:"cake",ko:"케이크",e:"🎂"},{en:"pizza",ko:"피자",e:"🍕"},{en:"banana",ko:"바나나",e:"🍌"},{en:"orange",ko:"오렌지",e:"🍊"}],colors:[{en:"red",ko:"빨간색",e:"🔴"},{en:"blue",ko:"파란색",e:"🔵"},{en:"green",ko:"초록색",e:"🟢"},{en:"yellow",ko:"노란색",e:"🟡"},{en:"black",ko:"검은색",e:"⚫"},{en:"white",ko:"하얀색",e:"⚪"},{en:"pink",ko:"분홍색",e:"🩷"},{en:"purple",ko:"보라색",e:"🟣"}],body:[{en:"head",ko:"머리",e:"🗣️"},{en:"hand",ko:"손",e:"✋"},{en:"eye",ko:"눈",e:"👁️"},{en:"ear",ko:"귀",e:"👂"},{en:"nose",ko:"코",e:"👃"},{en:"mouth",ko:"입",e:"👄"},{en:"foot",ko:"발",e:"🦶"},{en:"arm",ko:"팔",e:"💪"}],numbers:[{en:"one",ko:"1",e:"1️⃣"},{en:"two",ko:"2",e:"2️⃣"},{en:"three",ko:"3",e:"3️⃣"},{en:"four",ko:"4",e:"4️⃣"},{en:"five",ko:"5",e:"5️⃣"},{en:"six",ko:"6",e:"6️⃣"},{en:"seven",ko:"7",e:"7️⃣"},{en:"eight",ko:"8",e:"8️⃣"},{en:"nine",ko:"9",e:"9️⃣"},{en:"ten",ko:"10",e:"🔟"}]};
-const SN=[{p:["I","am","a","student"],ko:"나는 학생입니다.",h:"나/~이다/하나의/학생"},{p:["She","is","my","friend"],ko:"그녀는 내 친구.",h:"그녀/~이다/나의/친구"},{p:["I","like","apples"],ko:"사과를 좋아합니다.",h:"나/좋아하다/사과들"},{p:["He","is","tall"],ko:"그는 키가 큽니다.",h:"그/~이다/키큰"},{p:["We","go","to","school"],ko:"학교에 갑니다.",h:"우리/가다/~로/학교"},{p:["They","play","soccer"],ko:"축구를 합니다.",h:"그들/하다/축구"},{p:["This","is","a","book"],ko:"이것은 책입니다.",h:"이것/~이다/하나의/책"},{p:["I","have","two","cats"],ko:"고양이 두 마리.",h:"나/가지다/두/고양이들"},{p:["She","reads","a","book"],ko:"그녀는 책을 읽습니다.",h:"그녀/읽다/하나의/책"},{p:["We","eat","lunch"],ko:"점심을 먹습니다.",h:"우리/먹다/점심"}];
-const GR=[{s:"I ___ a student.",o:["am","is","are"],a:0,r:"I + am",ko:"나는 학생입니다."},{s:"She ___ happy.",o:["am","is","are"],a:1,r:"She/He/It + is",ko:"그녀는 행복합니다."},{s:"They ___ friends.",o:["am","is","are"],a:2,r:"They/We/You + are",ko:"그들은 친구."},{s:"He ___ a dog.",o:["have","has","having"],a:1,r:"He/She/It + has",ko:"개가 있습니다."},{s:"I ___ to school.",o:["go","goes","going"],a:0,r:"I/You/We/They + 원형",ko:"학교에 갑니다."},{s:"She ___ English.",o:["study","studies","studying"],a:1,r:"She/He/It + -es",ko:"영어를 공부합니다."},{s:"We ___ lunch now.",o:["eat","eats","are eating"],a:2,r:"현재진행: be+-ing",ko:"점심을 먹고 있습니다."},{s:"___ is your name?",o:["Who","What","Where"],a:1,r:"What=무엇",ko:"이름이 뭐니?"},{s:"___ do you live?",o:["Who","What","Where"],a:2,r:"Where=어디",ko:"어디 사니?"},{s:"I ___ not like bugs.",o:["do","does","am"],a:0,r:"I + do not",ko:"벌레를 안좋아해."}];
-const SP=[{name:"김민수",xp:450,lv:5,sk:7,qc:12,wl:65,tc:108,ta:130,ll:"03-25"},{name:"이서연",xp:680,lv:7,sk:14,qc:18,wl:92,tc:165,ta:180,ll:"03-25"},{name:"박지훈",xp:220,lv:3,sk:2,qc:5,wl:28,tc:42,ta:65,ll:"03-24"},{name:"최유진",xp:890,lv:9,sk:21,qc:24,wl:120,tc:210,ta:225,ll:"03-25"},{name:"정하윤",xp:150,lv:2,sk:1,qc:3,wl:15,tc:22,ta:38,ll:"03-23"},{name:"강도윤",xp:340,lv:4,sk:5,qc:9,wl:47,tc:78,ta:98,ll:"03-25"}];
-
-const speak=(t,r=0.85)=>{if(!window.speechSynthesis)return;window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang="en-US";u.rate=r;u.pitch=1;const v=window.speechSynthesis.getVoices();const ev=v.find(x=>x.lang.startsWith("en")&&x.name.includes("Google"))||v.find(x=>x.lang.startsWith("en-US"))||v.find(x=>x.lang.startsWith("en"));if(ev)u.voice=ev;window.speechSynthesis.speak(u);};
-const xpF=lv=>lv*50+(lv-1)*20;
-const sv2=(k,d)=>{try{localStorage.setItem('eq_'+k,JSON.stringify(d))}catch(e){}};
-const ld=(k)=>{try{const d=localStorage.getItem('eq_'+k);return d?JSON.parse(d):null}catch(e){return null}};
-
-const SB=({t,sz,lb})=><button className={`bspk ${sz||""}`} onClick={()=>speak(t)}>🔊 {lb||""}</button>;
-const WC=({letter,onDone})=>{const cr=useRef(null),dr=useRef(false);const[hd,setHd]=useState(false);const gp=e=>{const c=cr.current,r=c.getBoundingClientRect(),sx=c.width/r.width,sy=c.height/r.height;if(e.touches)return{x:(e.touches[0].clientX-r.left)*sx,y:(e.touches[0].clientY-r.top)*sy};return{x:(e.clientX-r.left)*sx,y:(e.clientY-r.top)*sy};};const sd=e=>{e.preventDefault();const ctx=cr.current.getContext("2d"),p=gp(e);ctx.beginPath();ctx.moveTo(p.x,p.y);dr.current=true;};const mv=e=>{e.preventDefault();if(!dr.current)return;const ctx=cr.current.getContext("2d"),p=gp(e);ctx.lineWidth=6;ctx.lineCap="round";ctx.lineJoin="round";ctx.strokeStyle="#4f46e5";ctx.lineTo(p.x,p.y);ctx.stroke();setHd(true);};const ed=()=>{dr.current=false;};const dg=useCallback((ctx,l)=>{ctx.clearRect(0,0,300,300);ctx.strokeStyle="#e5e7eb";ctx.lineWidth=1;ctx.setLineDash([5,5]);ctx.beginPath();ctx.moveTo(150,0);ctx.lineTo(150,300);ctx.moveTo(0,150);ctx.lineTo(300,150);ctx.stroke();ctx.setLineDash([]);ctx.font="200px 'Fredoka',sans-serif";ctx.fillStyle="rgba(200,200,200,0.3)";ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText(l,150,155);},[]);const cl=()=>{dg(cr.current.getContext("2d"),letter);setHd(false);};useEffect(()=>{dg(cr.current.getContext("2d"),letter);setHd(false);},[letter,dg]);return<div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:10,marginTop:14}}><canvas ref={cr} width={300} height={300} className="wcc" onMouseDown={sd} onMouseMove={mv} onMouseUp={ed} onMouseLeave={ed} onTouchStart={sd} onTouchMove={mv} onTouchEnd={ed}/><div style={{display:"flex",gap:8}}><button className="bs" onClick={cl}>🗑️지우기</button>{hd&&<button className="bp" onClick={onDone}>✅완료!</button>}</div></div>;};
-
-function App(){
-  const[v,setV]=useState("welcome");const[st,setSt]=useState(()=>ld("student"));const[ni,setNi]=useState("");const[cs,setCs]=useState(null);const[sv,setSv]=useState(null);const[msg,setMsg]=useState(null);const[ai,setAi]=useState(0);const[wc,setWcc]=useState("animals");const[wi,setWi]=useState(0);const[swa,setSwa]=useState(false);const[mg,setMg]=useState(null);const[si,setSi]=useState(0);const[sp,setSp]=useState([]);const[sa,setSa]=useState([]);const[gi,setGi]=useState(0);const[gs,setGs]=useState(null);const[qq,setQq]=useState([]);const[qi,setQi]=useState(0);const[qs,setQs]=useState(0);const[qa,setQa]=useState(false);const[sr,setSr]=useState(null);const[dt,setDt]=useState("overview");const[qr,setQr]=useState(false);
-
-  useEffect(()=>{if(st)setV("map")},[]);
-  useEffect(()=>{if(st)sv2("student",st)},[st]);
-  useEffect(()=>{window.speechSynthesis?.getVoices()},[]);
-  useEffect(()=>{if(!st)return;const td=new Date().toDateString();if(st.lastLogin!==td){const yd=new Date(Date.now()-86400000).toDateString();setSt(p=>({...p,lastLogin:td,sk:p.lastLogin===yd?p.sk+1:1}));}},[]);
-
-  const sm=(t,tp="s")=>{setMsg({t,tp});setTimeout(()=>setMsg(null),2500);};
-  const axp=amt=>{setSt(p=>{const nx=p.xp+amt;let nl=p.lv;while(nx>=xpF(nl+1))nl++;if(nl>p.lv)setTimeout(()=>sm(`🎉 레벨UP! Lv.${nl}`,"l"),300);return{...p,xp:nx,lv:nl};});};
-  useEffect(()=>{if(!st)return;BADGES.forEach(b=>{if(!st.badges.includes(b.id)&&b.c(st)){setSt(p=>({...p,badges:[...p.badges,b.id]}));sm(`🏅 배지: ${b.name}!`,"b");}});},[st?.xp,st?.qc,st?.wl]);
-
-  const go=()=>{if(!ni.trim())return;const s={name:ni.trim(),xp:0,lv:1,sk:1,lastLogin:new Date().toDateString(),qc:0,wl:0,ps:0,sv:0,sb:0,badges:[],ap:{},tc:0,ta:0};setSt(s);setV("map");sm(`환영, ${ni.trim()}! 🚀`);};
-  const logout=()=>{localStorage.removeItem('eq_student');setSt(null);setV("welcome");setNi("");};
-  const enter=s=>{if(st.xp<s.uxp){sm(`XP ${s.uxp} 필요!`,"e");return;}setCs(s);setSv(null);setV("stage");setSt(p=>({...p,sv:Math.max(p.sv,s.id)}));};
-  const smg=()=>{const w=WD[wc].slice(0,6);setMg({w,sk:[...w].sort(()=>Math.random()-0.5),sel:null,m:[],at:0});setSv("match");};
-  const hm=(tp,ix)=>{if(!mg)return;if(!mg.sel){setMg(p=>({...p,sel:{tp,ix}}));return;}const s=mg.sel;if(s.tp===tp){setMg(p=>({...p,sel:{tp,ix}}));return;}const ew=tp==="en"?mg.w[ix]:mg.w[s.ix];const kw=tp==="ko"?mg.sk[ix]:mg.sk[s.ix];if(ew.en===kw.en){const nm=[...mg.m,ew.en];setMg(p=>({...p,m:nm,sel:null,at:p.at+1}));speak(ew.en);if(nm.length===mg.w.length){axp(30);sm("🎉매칭완료! +30XP");setSt(p=>({...p,wl:p.wl+6}));}}else{setMg(p=>({...p,sel:null,at:p.at+1}));sm("❌다시!","e");}};
-  const ssent=ix=>{setSi(ix);setSp([...SN[ix].p].sort(()=>Math.random()-0.5));setSa([]);setSv("sentence");};
-  const csent=()=>{if(JSON.stringify(sa)===JSON.stringify(SN[si].p)){axp(20);speak(SN[si].p.join(" "));sm("🎉정답! +20XP");setSt(p=>({...p,sb:p.sb+1,tc:p.tc+1,ta:p.ta+1}));}else{sm("❌다시!","e");setSt(p=>({...p,ta:p.ta+1}));}};
-  const sqz=()=>{const qs2=[];const aw=Object.values(WD).flat();for(let i=0;i<4;i++){const w=aw[Math.floor(Math.random()*aw.length)];const o=[...aw.filter(x=>x.en!==w.en).sort(()=>Math.random()-0.5).slice(0,3).map(x=>x.ko),w.ko].sort(()=>Math.random()-0.5);qs2.push({tp:"word",q:`"${w.en}"의 뜻은?`,o,a:o.indexOf(w.ko),sp:w.en});}for(let i=0;i<3;i++){const g=GR[Math.floor(Math.random()*GR.length)];qs2.push({tp:"grammar",q:g.s,o:g.o,a:g.a,r:g.r,ko:g.ko});}for(let i=0;i<3;i++){const w=aw[Math.floor(Math.random()*aw.length)];const o=[...aw.filter(x=>x.en!==w.en).sort(()=>Math.random()-0.5).slice(0,3).map(x=>x.en),w.en].sort(()=>Math.random()-0.5);qs2.push({tp:"listen",q:"🔊 듣고 맞는 단어 고르기",o,a:o.indexOf(w.en),sp:w.en});}setQq(qs2.sort(()=>Math.random()-0.5));setQi(0);setQs(0);setQa(false);setSr(null);setV("quiz");};
-  const aqz=oi=>{if(qa)return;setQa(true);const q=qq[qi];setSr(oi===q.a?"ok":"no");if(oi===q.a)setQs(p=>p+1);if(q.sp)speak(q.sp);};
-  const nqz=()=>{if(qi+1>=qq.length){axp(qs*10);setSt(p=>({...p,qc:p.qc+1,ps:p.ps+(qs===qq.length?1:0),tc:p.tc+qs,ta:p.ta+qq.length}));setV("result");return;}setQi(p=>p+1);setQa(false);setSr(null);};
-
-  const nlx=st?xpF(st.lv+1):0,plx=st?xpF(st.lv):0,xpp=st?Math.max(0,Math.min(100,((st.xp-plx)/(nlx-plx))*100)):0;
-  const Toast=()=>msg&&<div className={`toast ${msg.tp}`}>{msg.t}</div>;
-  const QRM=()=>qr&&<div className="mdl" onClick={()=>setQr(false)}><div className="mdl-c" onClick={e=>e.stopPropagation()}><h3 style={{fontFamily:"'Fredoka'",marginBottom:10}}>📱 공유하기</h3><p style={{fontSize:"0.85em",color:"#64748b",marginBottom:10}}>이 주소를 학생들에게 공유하세요!</p><div style={{background:"#f1f5f9",padding:"10px",borderRadius:12,fontSize:"0.78em",wordBreak:"break-all",marginBottom:10,fontFamily:"monospace"}}>{window.location.href}</div><div style={{marginBottom:8}}><button className="bp" onClick={()=>{navigator.clipboard?.writeText(window.location.href);sm("📋 복사 완료!");setQr(false);}}>📋 주소 복사</button></div><button className="bs" onClick={()=>setQr(false)}>닫기</button></div></div>;
-
-  const Hdr=()=><div className="hdr"><div className="hdr-l"><span className="logo">🏰 English Quest</span><div style={{display:"flex",gap:6,flexWrap:"wrap"}}><span className="sb">⭐Lv.{st.lv}</span><span className="sb">✨{st.xp}XP</span><span className="sb">🔥{st.sk}일</span></div></div><div className="nav"><button className={`nb ${v==="map"?"on":""}`} onClick={()=>{setV("map");setSv(null);}}>🗺️맵</button><button className="nb" onClick={sqz}>📝퀴즈</button><button className={`nb ${v==="profile"?"on":""}`} onClick={()=>setV("profile")}>🎖️프로필</button><button className={`nb ${v==="lb"?"on":""}`} onClick={()=>setV("lb")}>🏆순위</button><button className="nb" onClick={()=>setQr(true)}>📱공유</button></div></div>;
-
-  if(v==="welcome")return<div><Toast/><QRM/><div className="welcome"><div className="bounce">🏰</div><h1>English Quest</h1><p>모험으로 배우는 영어! 🌟<br/>알파벳부터 문장까지 재미있게!</p><input className="win" placeholder="이름을 입력하세요" value={ni} onChange={e=>setNi(e.target.value)} onKeyDown={e=>e.key==="Enter"&&go()}/><button className="bp" onClick={go} style={{fontSize:"1.05em",padding:"11px 30px"}}>🚀 모험 시작!</button><div style={{marginTop:18,display:"flex",gap:10,flexWrap:"wrap",justifyContent:"center"}}><button className="bg2" onClick={()=>setV("dash")}>📊 교사 대시보드</button><button style={{padding:"8px 16px",borderRadius:14,border:"2px solid rgba(255,255,255,0.4)",background:"rgba(255,255,255,0.12)",color:"white",cursor:"pointer",fontFamily:"'Noto Sans KR'",fontSize:"0.85em",fontWeight:600}} onClick={()=>setQr(true)}>📱 공유</button></div></div></div>;
-
-  if(v==="dash"){const tot=SP.length;const ax=Math.round(SP.reduce((a,s)=>a+s.xp,0)/tot);const aa=Math.round(SP.reduce((a,s)=>a+(s.ta?s.tc/s.ta*100:0),0)/tot);const ac=SP.filter(s=>s.ll==="03-25").length;
-  return<div><Toast/><QRM/><div className="hdr"><span className="logo">📊 교사 대시보드</span><div style={{display:"flex",gap:4,flexWrap:"wrap"}}>{["overview","students","analytics"].map(t=><button key={t} className={`dtb ${dt===t?"on":""}`} onClick={()=>setDt(t)}>{t==="overview"?"📋현황":t==="students"?"👥학생":"📈분석"}</button>)}<button className="dtb" onClick={()=>setV(st?"map":"welcome")}>🏠{st?"게임":"홈"}</button></div></div>
-  <div className="cnt">
-    {dt==="overview"&&<><div className="stg">{[[tot,"전체학생"],[ac,"오늘활동"],[ax,"평균XP"],[aa+"%","평균정답률"]].map(([v2,l],i)=><div key={i} className="stc"><div className="stv">{v2}</div><div className="stl">{l}</div></div>)}</div><div className="card"><div className="sec">📊 학생별 XP</div><div className="bars">{SP.map((s,i)=><div key={i} className="bi2"><div style={{fontSize:"0.68em",fontWeight:600}}>{s.xp}</div><div className="bar" style={{height:`${(s.xp/1000)*120}px`,background:"linear-gradient(180deg,#4f46e5,#7c3aed)"}}/><div className="bl">{s.name.slice(0,3)}</div></div>)}</div></div><div className="card"><div className="sec">🏆 우수 학생</div>{[...SP].sort((a,b)=>b.xp-a.xp).slice(0,3).map((s,i)=><div key={i} className={`lb2 ${["t1","t2","t3"][i]}`}><div style={{fontFamily:"'Fredoka'",fontSize:"1.2em",fontWeight:700,width:32,textAlign:"center"}}>{["🥇","🥈","🥉"][i]}</div><div style={{flex:1}}><div style={{fontWeight:600}}>{s.name}</div><div style={{fontSize:"0.72em",color:"#64748b"}}>Lv.{s.lv}•🔥{s.sk}일•📚{s.wl}단어</div></div><div style={{fontFamily:"'Fredoka'",fontWeight:600,color:"#4f46e5"}}>{s.xp}XP</div></div>)}</div></>}
-    {dt==="students"&&<div className="card" style={{overflow:"auto"}}><div className="sec">👥 학생별 현황</div><table className="dt"><thead><tr>{["이름","레벨","XP","연속","퀴즈","단어","정답률","접속"].map((h,i)=><th key={i}>{h}</th>)}</tr></thead><tbody>{SP.map((s,i)=><tr key={i}><td style={{fontWeight:600}}>{s.name}</td><td>Lv.{s.lv}</td><td>{s.xp}</td><td>🔥{s.sk}일</td><td>{s.qc}회</td><td>{s.wl}개</td><td style={{color:(s.tc/s.ta*100)>=80?"#16a34a":"#f59e0b",fontWeight:600}}>{Math.round(s.tc/s.ta*100)}%</td><td>{s.ll}</td></tr>)}</tbody></table></div>}
-    {dt==="analytics"&&<><div className="stg">{[[Math.round(SP.reduce((a,s)=>a+s.qc,0)/tot),"평균퀴즈"],[Math.round(SP.reduce((a,s)=>a+s.wl,0)/tot),"평균단어"],[Math.round(SP.reduce((a,s)=>a+s.sk,0)/tot),"평균연속일"],[Math.round(ac/tot*100)+"%","참여율"]].map(([v2,l],i)=><div key={i} className="stc"><div className="stv">{v2}</div><div className="stl">{l}</div></div>)}</div><div className="card"><div className="sec">⚠️ 관심 필요</div>{SP.filter(s=>s.sk<=2||(s.ta&&s.tc/s.ta<0.6)).map((s,i)=><div key={i} style={{padding:"6px 0",borderBottom:"1px solid #e2e8f0",display:"flex",justifyContent:"space-between",fontSize:"0.85em"}}><span style={{fontWeight:600}}>{s.name}</span><span>{s.sk<=2&&<span style={{color:"#ef4444",marginRight:4}}>⚠️{s.sk}일</span>}{s.ta&&s.tc/s.ta<0.6&&<span style={{color:"#f59e0b"}}>📉{Math.round(s.tc/s.ta*100)}%</span>}</span></div>)}</div></>}
-  </div></div>;}
-
-  if(v==="map")return<div><Toast/><QRM/><Hdr/><div className="cnt"><div style={{marginBottom:12}}><div className="xpbg"><div className="xpf" style={{width:`${xpp}%`}}/></div><div style={{fontSize:"0.75em",color:"rgba(255,255,255,0.75)",textAlign:"right",marginTop:2}}>다음레벨: {Math.max(0,nlx-st.xp)}XP</div></div><div style={{textAlign:"center",color:"white",fontFamily:"'Fredoka'",fontSize:"clamp(1.3em,4vw,1.7em)",marginBottom:14,textShadow:"1px 1px 4px rgba(0,0,0,0.2)"}}>🗺️ 모험의 땅</div><div className="sgrid">{STAGES.map(s=>{const lk=st.xp<s.uxp;return<div key={s.id} className={`sc ${lk?"lk":""}`} onClick={()=>enter(s)} style={{borderColor:lk?"#e2e8f0":s.color}}>{lk&&<div style={{position:"absolute",top:8,right:8,fontSize:"1.3em"}}>🔒</div>}<div className="ico">{s.icon}</div><h3>{s.name}</h3><p>{s.desc}</p>{lk&&<p style={{fontSize:"0.72em",color:"#ef4444",marginTop:2}}>🔒{s.uxp}XP</p>}</div>;})}</div><div className="card" style={{marginTop:12,textAlign:"center"}}><div style={{fontSize:"1.3em",marginBottom:5}}>🎯 오늘의 도전</div><p style={{color:"#64748b",marginBottom:8,fontSize:"0.85em"}}>종합 퀴즈로 XP 획득!</p><button className="bg2" onClick={sqz}>📝 종합 퀴즈!</button></div><div style={{textAlign:"center",marginTop:12}}><button style={{background:"none",border:"none",color:"rgba(255,255,255,0.5)",cursor:"pointer",fontSize:"0.75em",fontFamily:"'Noto Sans KR'"}} onClick={logout}>🚪 로그아웃</button></div></div></div>;
-
-  if(v==="stage"&&cs){const RS=()=>{
-    if(cs.id===1){const a=AL[ai];if(sv==="write")return<div className="card"><div className="sec">✍️ 따라쓰기: {a.u}</div><div style={{textAlign:"center",marginBottom:8}}><span style={{fontFamily:"'Fredoka'",fontSize:"clamp(3em,10vw,5em)",fontWeight:700,color:"#4f46e5"}}>{a.u}</span><span style={{fontFamily:"'Fredoka'",fontSize:"clamp(2em,7vw,3.5em)",color:"#7c3aed",marginLeft:10}}>{a.lo}</span></div><p style={{textAlign:"center",color:"#64748b",fontSize:"0.82em"}}>가이드 위에 따라 써보세요!</p><WC letter={a.u} onDone={()=>{axp(5);sm(`✅${a.u}완료! +5XP`);setSt(p=>({...p,ap:{...p.ap,[a.u]:true}}));if(ai<25)setAi(p=>p+1);}}/><div style={{textAlign:"center",marginTop:10}}><SB t={a.u} sz="lg" lb="발음 듣기"/></div></div>;
-    return<><div className="card"><div style={{textAlign:"center",padding:14}}><div><span style={{fontFamily:"'Fredoka'",fontSize:"clamp(3.5em,12vw,5.5em)",fontWeight:700,color:"#4f46e5",lineHeight:1}}>{a.u}</span><span style={{fontFamily:"'Fredoka'",fontSize:"clamp(2em,8vw,3.5em)",color:"#7c3aed",marginLeft:10}}>{a.lo}</span></div><div style={{fontSize:"1.3em",margin:"10px 0",fontWeight:600}}><span style={{fontSize:"1.2em",marginRight:5}}>{a.e}</span>{a.w}</div><div style={{display:"flex",gap:6,justifyContent:"center",flexWrap:"wrap"}}><SB t={a.u} lb={`"${a.u}"`}/><SB t={a.lo} lb={`"${a.lo}"`}/><SB t={a.w} lb={`"${a.w}"`}/></div><div style={{display:"flex",gap:8,justifyContent:"center",marginTop:12,flexWrap:"wrap"}}><button className="bs" onClick={()=>setAi(Math.max(0,ai-1))}>◀이전</button><button className="bp" onClick={()=>setSv("write")}>✍️따라쓰기</button><button className="bs" onClick={()=>setAi(Math.min(25,ai+1))}>다음▶</button></div></div></div><div className="card"><div className="sec">알파벳 목록 (클릭→발음)</div><div className="ag">{AL.map((x,i)=><div key={i} className={`ac ${i===ai?"cur":""} ${st.ap[x.u]?"ok2":""}`} onClick={()=>{setAi(i);speak(x.u);}}>{x.u}</div>)}</div></div></>;}
-    if(cs.id===2){const cn={animals:"🐾동물",food:"🍽️음식",colors:"🎨색깔",body:"🧍신체",numbers:"🔢숫자"};if(sv==="match")return<div className="card"><div className="sec">🎮 매칭 ({cn[wc]})</div>{mg&&<><div className="mgrid"><div className="mc"><h4>🇺🇸 English</h4>{mg.w.map((w,i)=><div key={i} className={`mi ${mg.m.includes(w.en)?"done":""} ${mg.sel?.tp==="en"&&mg.sel.ix===i?"sel":""}`} onClick={()=>!mg.m.includes(w.en)&&hm("en",i)}>{w.e} {w.en}</div>)}</div><div className="mc"><h4>🇰🇷 한국어</h4>{mg.sk.map((w,i)=><div key={i} className={`mi ${mg.m.includes(w.en)?"done":""} ${mg.sel?.tp==="ko"&&mg.sel.ix===i?"sel":""}`} onClick={()=>!mg.m.includes(w.en)&&hm("ko",i)}>{w.ko}</div>)}</div></div><div style={{textAlign:"center",marginTop:8,color:"#64748b",fontSize:"0.78em"}}>매칭:{mg.m.length}/{mg.w.length}</div>{mg.m.length===mg.w.length&&<div style={{textAlign:"center",marginTop:12}}><button className="bp" onClick={()=>setSv(null)}>🎉돌아가기</button></div>}</>}</div>;
-    const ws=WD[wc],w=ws[wi%ws.length];return<><div className="card"><div className="sec">📚 단어 학습</div><div className="cats">{Object.entries(cn).map(([k,n])=><button key={k} className={`cat ${wc===k?"on":""}`} onClick={()=>{setWcc(k);setWi(0);setSwa(false);}}>{n}</button>)}</div><div className="flash" onClick={()=>{setSwa(!swa);speak(w.en);}}><div className="emo">{w.e}</div><div className="wen">{w.en}</div>{swa&&<div className="wko">{w.ko}</div>}{!swa&&<p style={{color:"#94a3b8",fontSize:"0.82em",marginTop:5}}>👆 터치→뜻 보기</p>}</div><div style={{display:"flex",justifyContent:"center",gap:7,flexWrap:"wrap"}}><button className="bs" onClick={()=>{setWi(Math.max(0,wi-1));setSwa(false);}}>◀이전</button><SB t={w.en} sz="lg" lb="🔊발음"/><SB t={`${w.en}. ${w.en}`} lb="🐢천천히"/><button className="bs" onClick={()=>{setWi(wi+1);setSwa(false);axp(2);setSt(p=>({...p,wl:p.wl+1}));}}>다음▶</button></div><div style={{textAlign:"center",marginTop:5,color:"#64748b",fontSize:"0.78em"}}>{wi%ws.length+1}/{ws.length}</div></div><div className="card"><div className="sec">🎮 미니게임</div><div className="actg"><div className="actb" onClick={smg}><div style={{fontSize:"1.7em"}}>🔗</div><div style={{fontWeight:600}}>단어 매칭</div></div><div className="actb" onClick={sqz}><div style={{fontSize:"1.7em"}}>📝</div><div style={{fontWeight:600}}>단어 퀴즈</div></div></div></div></>;}
-    if(cs.id===3){if(sv==="sentence"){const sd=SN[si];return<div className="card"><div className="sec">🧩 문장 만들기</div><div className="hint">💡 뜻: {sd.ko}<br/>📌 힌트: {sd.h}</div><div className={`sa ${sa.length?"has":""}`}>{!sa.length&&<span style={{color:"#94a3b8",fontSize:"0.82em"}}>👆단어를 순서대로 클릭</span>}{sa.map((p,i)=><span key={i} className="ch put" onClick={()=>{setSp(x=>[...x,p]);setSa(x=>x.filter((_,j)=>j!==i));}}>{p}</span>)}</div><div style={{display:"flex",flexWrap:"wrap",gap:6,justifyContent:"center",marginBottom:12}}>{sp.map((p,i)=><span key={i} className="ch src" onClick={()=>{setSa(x=>[...x,p]);setSp(x=>x.filter((_,j)=>j!==i));}}>{p}</span>)}</div><div style={{display:"flex",gap:7,justifyContent:"center",flexWrap:"wrap"}}><button className="bs" onClick={()=>ssent(si)}>🔄다시</button>{sa.length===sd.p.length&&<button className="bp" onClick={csent}>✅확인</button>}<SB t={sd.p.join(" ")} lb="🔊정답"/></div></div>;}
-    return<div className="card"><div className="sec">🌉 문장 만들기</div>{SN.map((s,i)=><div key={i} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"8px 0",borderBottom:"1px solid #e2e8f0",gap:6}}><div style={{flex:1,minWidth:0}}><div style={{fontWeight:600,fontSize:"0.88em"}}>{s.ko}</div><div style={{fontSize:"0.78em",color:"#64748b"}}>{s.p.join(" ")}</div></div><div style={{display:"flex",gap:4,flexShrink:0}}><SB t={s.p.join(" ")}/><button className="bp" style={{padding:"4px 10px",fontSize:"0.78em"}} onClick={()=>ssent(i)}>도전!</button></div></div>)}</div>;}
-    if(cs.id===4){const g=GR[gi];return<div className="card"><div className="sec">🏰 기초 문법</div><div style={{textAlign:"center",color:"#64748b",fontSize:"0.78em",marginBottom:5}}>{gi+1}/{GR.length}</div><div className="rule">📖 규칙: {g.r}</div><div className="hint">💡 뜻: {g.ko}</div><div style={{textAlign:"center",fontSize:"1.3em",fontFamily:"'Fredoka'",margin:"16px 0",fontWeight:600}}>{g.s}</div><div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>{g.o.map((o,i)=><button key={i} className={`qo ${gs===i?(i===g.a?"ok":"no"):""}`} onClick={()=>{if(gs!==null)return;setGs(i);if(i===g.a){axp(15);sm("🎉정답! +15XP");speak(g.s.replace("___",g.o[g.a]));setSt(p=>({...p,tc:p.tc+1,ta:p.ta+1}));}else{sm(`❌정답:${g.o[g.a]}`,"e");setSt(p=>({...p,ta:p.ta+1}));}}}>{o}</button>)}</div>{gs!==null&&<div style={{textAlign:"center",marginTop:12}}><SB t={g.s.replace("___",g.o[g.a])} sz="lg" lb="🔊정답문장"/><div style={{marginTop:8}}><button className="bp" onClick={()=>{setGi((gi+1)%GR.length);setGs(null);}}>다음▶</button></div></div>}</div>;}
-  };return<div><Toast/><QRM/><Hdr/><div className="cnt"><button style={{background:"rgba(255,255,255,0.18)",border:"none",color:"white",padding:"5px 14px",borderRadius:10,cursor:"pointer",fontFamily:"'Noto Sans KR'",fontSize:"0.85em",marginBottom:12}} onClick={()=>{setV("map");setSv(null);}}>← 맵으로</button><div style={{textAlign:"center",marginBottom:12}}><span style={{fontSize:"1.7em"}}>{cs.icon}</span><h2 style={{fontFamily:"'Fredoka'",color:"white",textShadow:"1px 1px 4px rgba(0,0,0,0.2)"}}>{cs.name}</h2></div><RS/></div></div>;}
-
-  if(v==="quiz"&&qq.length>0){const q=qq[qi];return<div><Toast/><QRM/><Hdr/><div className="cnt"><div className="card"><div style={{display:"flex",alignItems:"center",marginBottom:12}}><span style={{fontWeight:600,fontSize:"0.9em"}}>Q{qi+1}</span><div style={{background:"rgba(0,0,0,0.06)",borderRadius:10,height:6,flex:1,margin:"0 12px",overflow:"hidden"}}><div style={{height:"100%",background:"linear-gradient(90deg,#818cf8,#e879f9)",borderRadius:10,width:`${((qi+1)/qq.length)*100}%`}}/></div><span style={{fontWeight:600,color:"#4f46e5",fontSize:"0.9em"}}>{qs}점</span></div>{q.tp==="listen"&&<div style={{textAlign:"center",marginBottom:8}}><button className="bspk lg" onClick={()=>speak(q.sp)} style={{fontSize:"1.3em",padding:"10px 22px"}}>🔊 듣기</button><p style={{color:"#64748b",marginTop:4,fontSize:"0.78em"}}>발음 듣고 단어 고르기</p></div>}<div style={{fontSize:"1.15em",fontWeight:600,textAlign:"center",margin:"14px 0",fontFamily:"'Fredoka'"}}>{q.q}</div>{q.r&&<div className="rule" style={{marginBottom:8}}>📖 {q.r}</div>}<div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>{q.o.map((o,i)=><button key={i} className={`qo ${qa?(i===q.a?"ok":""):""}`} onClick={()=>aqz(i)}>{o}</button>)}</div>{qa&&<div style={{textAlign:"center",marginTop:12}}><div style={{fontSize:"1em",fontWeight:600,color:sr==="ok"?"#16a34a":"#ef4444",marginBottom:8}}>{sr==="ok"?"🎉정답!":`❌정답: ${q.o[q.a]}`}</div><button className="bp" onClick={nqz}>{qi+1>=qq.length?"결과보기":"다음▶"}</button></div>}</div></div></div>;}
-
-  if(v==="result"){const pct=Math.round((qs/qq.length)*100);return<div><Toast/><QRM/><Hdr/><div className="cnt"><div className="card" style={{textAlign:"center",padding:24}}><div style={{fontSize:"2.5em",marginBottom:5}}>{pct>=80?"🏆":pct>=50?"👍":"💪"}</div><h2 style={{fontFamily:"'Fredoka'",marginBottom:5}}>퀴즈 완료!</h2><div style={{fontFamily:"'Fredoka'",fontSize:"3em",fontWeight:700,color:"#4f46e5"}}>{qs}/{qq.length}</div><p style={{fontSize:"0.92em",color:"#64748b",margin:"5px 0 12px"}}>정답률:{pct}% • +{qs*10}XP</p><div style={{display:"flex",gap:8,justifyContent:"center",flexWrap:"wrap"}}><button className="bp" onClick={sqz}>🔄다시</button><button className="bs" onClick={()=>setV("map")}>🗺️맵</button></div></div></div></div>;}
-
-  if(v==="profile")return<div><Toast/><QRM/><Hdr/><div className="cnt"><div className="card" style={{textAlign:"center",padding:16}}><div style={{fontSize:"3em",marginBottom:4}}>🧙</div><h2 style={{fontFamily:"'Fredoka'"}}>{st.name}</h2><div style={{display:"flex",gap:10,justifyContent:"center",flexWrap:"wrap",marginTop:5}}><span className="sb" style={{background:"#4f46e5"}}>⭐Lv.{st.lv}</span><span className="sb" style={{background:"#f59e0b"}}>✨{st.xp}XP</span><span className="sb" style={{background:"#ef4444"}}>🔥{st.sk}일</span></div></div><div className="stg">{[[st.qc,"퀴즈완료"],[st.wl,"학습단어"],[st.sb,"문장완성"],[(st.ta?Math.round(st.tc/st.ta*100):0)+"%","정답률"]].map(([v2,l],i)=><div key={i} className="stc"><div className="stv">{v2}</div><div className="stl">{l}</div></div>)}</div><div className="card"><div className="sec">🎖️ 배지 ({st.badges.length}/{BADGES.length})</div><div className="bg3">{BADGES.map(b=><div key={b.id} className={`bc ${st.badges.includes(b.id)?"on":"off"}`}><div style={{fontSize:"1.9em"}}>{b.icon}</div><div style={{fontSize:"0.78em",fontWeight:600,marginTop:2}}>{b.name}</div><div style={{fontSize:"0.68em",color:"#64748b"}}>{b.desc}</div></div>)}</div></div></div></div>;
-
-  if(v==="lb"){const all=[...SP,{...st,name:st.name+"(나)",wl:st.wl}].sort((a,b)=>b.xp-a.xp);return<div><Toast/><QRM/><Hdr/><div className="cnt"><div className="card"><div className="sec">🏆 전체 순위</div>{all.map((s,i)=><div key={i} className={`lb2 ${i===0?"t1":i===1?"t2":i===2?"t3":""}`}><div style={{fontFamily:"'Fredoka'",fontSize:"1.2em",fontWeight:700,width:32,textAlign:"center"}}>{i<3?["🥇","🥈","🥉"][i]:i+1}</div><div style={{flex:1,minWidth:0}}><div style={{fontWeight:600,fontSize:"0.9em",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{s.name}</div><div style={{fontSize:"0.72em",color:"#64748b"}}>Lv.{s.lv}•🔥{s.sk}일•📚{s.wl||0}단어</div></div><div style={{fontFamily:"'Fredoka'",fontWeight:600,color:"#4f46e5",whiteSpace:"nowrap"}}>{s.xp}XP</div></div>)}</div></div></div>;}
-
-  return<div><Toast/></div>;
-}
-ReactDOM.createRoot(document.getElementById('app')).render(<App/>);
-</script>
-</body>
-</html>
+ReactDOM.createRoot(document.getElementById('root')).render(/*#__PURE__*/React.createElement(App, null));
+</script></body></html>
