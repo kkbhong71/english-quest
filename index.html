@@ -23,6 +23,18 @@ body{font-family:'Noto Sans KR',sans-serif;overflow-x:hidden;-webkit-tap-highlig
 </head>
 <body>
 <div id="root"></div>
+
+<!--
+  ╔══════════════════════════════════════════════╗
+  ║  🔒 교사 대시보드 비밀번호 설정              ║
+  ║  아래 큰따옴표 안의 값을 변경하세요          ║
+  ║  예: "1234" → "mypassword"                  ║
+  ╚══════════════════════════════════════════════╝
+-->
+<script>
+  window.TEACHER_PW = "5012";
+</script>
+
 <script>
 const {
   useState,
@@ -555,7 +567,8 @@ var xpFor = function (lv) {
 };
 
 // 교사 비밀번호 (변경 가능)
-var TEACHER_PW = "1005";
+// 비밀번호는 HTML 파일 상단에서 설정
+
 function SB(props) {
   return /*#__PURE__*/React.createElement("button", {
     onClick: function () {
@@ -1163,7 +1176,7 @@ function App() {
 
   // 교사 로그인 처리
   var teacherLogin = function () {
-    if (tpw === TEACHER_PW) {
+    if (tpw === (window.TEACHER_PW || "5012")) {
       setTauth(true);
       setTperr(false);
       setTpw("");
